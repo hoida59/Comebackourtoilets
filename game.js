@@ -61,7 +61,7 @@ class ToiletRunnerGame {
         this.video = document.createElement('video');
         
         // ⬇️⬇️⬇️ ЕДИНСТВЕННАЯ ССЫЛКА НА ВИДЕО ⬇️⬇️⬇️
-        const videoUrl = 'https://corsproxy.io/?' + encodeURIComponent('https://github.com/hoida59/Comebackourtoilets/raw/main/lv_0_20260125005509%20(2)%20(1).mp4');
+        const videoUrl = 'https://vkvideo.ru/clip-236002705_456239017'
         // ⬆️⬆️⬆️ БОЛЬШЕ НИГДЕ НЕТ ССЫЛОК ⬆️⬆️⬆️
         
         this.video.src = videoUrl;
