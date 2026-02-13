@@ -168,6 +168,30 @@ function downloadQR(qrId) {
     link.click();
 }
 
+// Функция загрузки своего QR-изображения
+function uploadQR(index) {
+    const input = document.getElementById(`qrUpload${index}`);
+    input.click();
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.getElementById(`qrCanvas${index}`);
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 200;
+                    canvas.height = 200;
+                    ctx.drawImage(img, 0, 0, 200, 200);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+}
+
 // ===== ИГРА =====
 function openGame() {
     const modal = document.getElementById('gameModal');
