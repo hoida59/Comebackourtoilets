@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Верните туалет на 4 этаж! | Кампания протеста</title>
+    <!-- favicon в виде эмодзи (не требует файла) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🚽</text></svg>">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -39,7 +41,7 @@
             <div class="counter-card">
                 <h3>Нас уже:</h3>
                 <div class="counter-display" id="signatureCounter">0</div>
-                <p class="counter-label">человек поддерживают!</p>
+                <p class="counter-label">человек поддерживает!</p>
             </div>
         </section>
 
@@ -62,7 +64,7 @@
             </div>
         </section>
 
-        <!-- QR коды -->
+        <!-- QR коды с возможностью загрузки своих изображений -->
         <section class="qr-section">
             <h2>Распространяй информацию!</h2>
             <p class="qr-description">Распечатай эти QR-коды и развесь по школе</p>
@@ -72,21 +74,33 @@
                         <canvas id="qrCanvas1"></canvas>
                     </div>
                     <p>Главная страница</p>
-                    <button class="download-qr" onclick="downloadQR('qr1')">Скачать</button>
+                    <div style="display: flex; justify-content: center; gap: 10px;">
+                        <button class="download-qr" onclick="downloadQR('qr1')">Скачать</button>
+                        <button class="upload-qr" onclick="uploadQR(1)">📤 Загрузить</button>
+                    </div>
+                    <input type="file" id="qrUpload1" accept="image/*" style="display:none;">
                 </div>
                 <div class="qr-card">
                     <div class="qr-placeholder" id="qr2">
                         <canvas id="qrCanvas2"></canvas>
                     </div>
                     <p>Игра</p>
-                    <button class="download-qr" onclick="downloadQR('qr2')">Скачать</button>
+                    <div style="display: flex; justify-content: center; gap: 10px;">
+                        <button class="download-qr" onclick="downloadQR('qr2')">Скачать</button>
+                        <button class="upload-qr" onclick="uploadQR(2)">📤 Загрузить</button>
+                    </div>
+                    <input type="file" id="qrUpload2" accept="image/*" style="display:none;">
                 </div>
                 <div class="qr-card">
                     <div class="qr-placeholder" id="qr3">
                         <canvas id="qrCanvas3"></canvas>
                     </div>
                     <p>Петиция</p>
-                    <button class="download-qr" onclick="downloadQR('qr3')">Скачать</button>
+                    <div style="display: flex; justify-content: center; gap: 10px;">
+                        <button class="download-qr" onclick="downloadQR('qr3')">Скачать</button>
+                        <button class="upload-qr" onclick="uploadQR(3)">📤 Загрузить</button>
+                    </div>
+                    <input type="file" id="qrUpload3" accept="image/*" style="display:none;">
                 </div>
             </div>
         </section>
