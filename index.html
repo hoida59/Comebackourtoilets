@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Верните туалет на 4 этаж! | Кампания протеста</title>
-    <!-- favicon в виде эмодзи (не требует файла) -->
+    <!-- favicon в виде эмодзи -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🚽</text></svg>">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -23,7 +23,7 @@
             <div class="protest-badge">✊ ПРОТЕСТ АКТИВЕН</div>
         </header>
 
-        <!-- 2. СЧЁТЧИК ПОДПИСЕЙ: Нас уже человек поддерживает -->
+        <!-- СЧЁТЧИК ПОДПИСЕЙ: Нас уже человек поддерживает -->
         <section class="counter-section">
             <div class="counter-card">
                 <h3>Нас уже:</h3>
@@ -32,7 +32,7 @@
             </div>
         </section>
 
-        <!-- 3. ФОРМА ПОДПИСИ: Поддержи кампанию! -->
+        <!-- ФОРМА ПОДПИСИ: Поддержи кампанию! -->
         <section class="signature-section">
             <h2>Поддержи кампанию!</h2>
             <div class="signature-form">
@@ -51,7 +51,7 @@
             </div>
         </section>
 
-        <!-- 4. БЛОК ИГРЫ: Сыграй в игру! -->
+        <!-- БЛОК ИГРЫ: Сыграй в игру! -->
         <section class="game-section">
             <div class="game-promo">
                 <h2>🎮 Сыграй в игру!</h2>
@@ -66,41 +66,36 @@
             </div>
         </section>
 
-      <!-- 5. QR-КОДЫ: Распространяй информацию! -->
-<section class="qr-section">
-    <h2>Распространяй информацию!</h2>
-    <p class="qr-description">Зайди в туалет на 3 на перемене и получи свой QR-код.</p>
-    <div class="qr-grid">
-        <div class="qr-card">
-            <div class="qr-placeholder" id="qr1">
-                <canvas id="qrCanvas1"></canvas>
+        <!-- QR-КОДЫ: Распространяй информацию! (фраза изменена, кнопки загрузки удалены) -->
+        <section class="qr-section">
+            <h2>Распространяй информацию!</h2>
+            <p class="qr-description">Зайди в туалет на 3 на перемене и получи свой QR-код.</p>
+            <div class="qr-grid">
+                <div class="qr-card">
+                    <div class="qr-placeholder" id="qr1">
+                        <canvas id="qrCanvas1"></canvas>
+                    </div>
+                    <p>Главная страница</p>
+                    <button class="download-qr" onclick="downloadQR('qr1')">Скачать</button>
+                </div>
+                <div class="qr-card">
+                    <div class="qr-placeholder" id="qr2">
+                        <canvas id="qrCanvas2"></canvas>
+                    </div>
+                    <p>Игра</p>
+                    <button class="download-qr" onclick="downloadQR('qr2')">Скачать</button>
+                </div>
+                <div class="qr-card">
+                    <div class="qr-placeholder" id="qr3">
+                        <canvas id="qrCanvas3"></canvas>
+                    </div>
+                    <p>Петиция</p>
+                    <button class="download-qr" onclick="downloadQR('qr3')">Скачать</button>
+                </div>
             </div>
-            <p>Главная страница</p>
-            <button class="download-qr" onclick="downloadQR('qr1')">Скачать</button>
-            <!-- Кнопка загрузки УДАЛЕНА -->
-        </div>
-        <div class="qr-card">
-            <div class="qr-placeholder" id="qr2">
-                <canvas id="qrCanvas2"></canvas>
-            </div>
-            <p>Игра</p>
-            <button class="download-qr" onclick="downloadQR('qr2')">Скачать</button>
-            <!-- Кнопка загрузки УДАЛЕНА -->
-        </div>
-        <div class="qr-card">
-            <div class="qr-placeholder" id="qr3">
-                <canvas id="qrCanvas3"></canvas>
-            </div>
-            <p>Петиция</p>
-            <button class="download-qr" onclick="downloadQR('qr3')">Скачать</button>
-            <!-- Кнопка загрузки УДАЛЕНА -->
-        </div>
-    </div>
-    <!-- Скрытые input тоже можно удалить, но для безопасности оставим комментарий -->
-    <!-- input type="file" больше не нужны, удалены -->
-</section>
+        </section>
 
-        <!-- 6. МОТИВАЦИЯ: Почему это важно? (теперь внизу) -->
+        <!-- МОТИВАЦИЯ: Почему это важно? -->
         <section class="motivation-section">
             <div class="motivation-card">
                 <h2>Почему это важно?</h2>
@@ -113,7 +108,7 @@
             </div>
         </section>
 
-        <!-- Пасхалка (остаётся на месте) -->
+        <!-- Пасхалка -->
         <section class="easter-eggs">
             <div class="easter-egg" onclick="showEasterEgg(1)">🔍</div>
         </section>
@@ -126,7 +121,7 @@
 
     </div>
 
-    <!-- Модальные окна (без изменений) -->
+    <!-- Модальное окно игры -->
     <div id="gameModal" class="modal">
         <div class="modal-content game-container">
             <button class="close-modal" onclick="closeGame()">✕</button>
@@ -146,6 +141,7 @@
         </div>
     </div>
 
+    <!-- Модальное окно сертификата -->
     <div id="certificateModal" class="modal">
         <div class="modal-content certificate-container">
             <button class="close-modal" onclick="closeCertificate()">✕</button>
@@ -184,6 +180,7 @@
         </div>
     </div>
 
+    <!-- Модальное окно пасхалки -->
     <div id="easterEggModal" class="modal">
         <div class="modal-content easter-egg-content">
             <button class="close-modal" onclick="closeEasterEgg()">✕</button>
