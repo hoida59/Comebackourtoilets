@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeSignatureSystem();
     updateCounter();
     loadHighScore();
-    generateQRCodes(); // Загружаем QR-коды
+    generateQRCodes();
 });
 
 // ===== СИСТЕМА ПОДПИСЕЙ =====
@@ -14,7 +14,6 @@ function initializeSignatureSystem() {
     const signButton = document.getElementById('signButton');
     const statusElement = document.getElementById('signatureStatus');
     
-    // Проверяем, подписывал ли пользователь
     const userSigned = localStorage.getItem('userSignedToilet');
     if (userSigned) {
         statusElement.textContent = '✅ Ты уже поддержал кампанию! Спасибо!';
@@ -24,12 +23,10 @@ function initializeSignatureSystem() {
         signButton.disabled = true;
     }
     
-    // Обработчик чекбокса
     checkbox.addEventListener('change', function() {
         signButton.disabled = !this.checked;
     });
     
-    // Обработчик кнопки подписи
     signButton.addEventListener('click', function() {
         if (!userSigned) {
             addSignature();
@@ -38,11 +35,7 @@ function initializeSignatureSystem() {
             statusElement.className = 'signature-status success';
             checkbox.disabled = true;
             signButton.disabled = true;
-            
-            // Анимация счётчика
             updateCounter();
-            
-            // Конфетти эффект
             createConfetti();
         }
     });
@@ -60,8 +53,6 @@ function addSignature() {
 function updateCounter() {
     const counterElement = document.getElementById('signatureCounter');
     const count = signatures.length;
-    
-    // Анимация счётчика
     animateCounter(counterElement, count);
 }
 
@@ -118,47 +109,15 @@ function createConfetti() {
     }
 }
 
-// ===== QR КОДЫ =====
-// Функция для генерации простого QR (заглушка)
-function generateSimpleQR(canvasId, text) {
-    const canvas = document.getElementById(canvasId);
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    canvas.width = 200;
-    canvas.height = 200;
-    
-    // Белый фон
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, 200, 200);
-    
-    // Простой паттерн QR (для демонстрации)
-    ctx.fillStyle = 'black';
-    const size = 10;
-    for (let i = 0; i < 20; i++) {
-        for (let j = 0; j < 20; j++) {
-            if (Math.random() > 0.5) {
-                ctx.fillRect(i * size, j * size, size, size);
-            }
-        }
-    }
-    
-    // Центральный логотип
-    ctx.fillStyle = 'white';
-    ctx.fillRect(75, 75, 50, 50);
-    ctx.font = '30px Arial';
-    ctx.fillStyle = 'black';
-    ctx.textAlign = 'center';
-    ctx.fillText('🚽', 100, 108);
-}
-
+// ===== QR КОДЫ - СЮДА ВСТАВЛЯЙ СВОИ ССЫЛКИ =====
 function generateQRCodes() {
-    // ВАШИ РЕАЛЬНЫЕ ССЫЛКИ С POSTIMAGES
+    // ⬇️⬇️⬇️ ЗДЕСЬ ВСТАВЛЯЙ СВОИ ТРИ ССЫЛКИ ⬇️⬇️⬇️
     const myImages = [
-        'https://i.postimg.cc/WpCwBmBx/IMG-20260213-231252-849.jpg', // ваш QR-код
-        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg', // пока та же, замените на свою
-        'https://i.postimg.cc/WpCwBmBx/IMG-20260213-231252-849.jpg'  // пока та же, замените на свою
+        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg', // Ссылка на 1-й QR (Главная страница)
+        'https://i.postimg.cc/твойкод2/твоя-картинка2.jpg', // Ссылка на 2-й QR (Игра)
+        'https://i.postimg.cc/твойкод3/твоя-картинка3.jpg'  // Ссылка на 3-й QR (Петиция)
     ];
+    // ⬆️⬆️⬆️ ЗДЕСЬ ВСТАВЛЯЙ СВОИ ТРИ ССЫЛКИ ⬆️⬆️⬆️
     
     // Загружаем каждую картинку
     for (let i = 0; i < myImages.length; i++) {
@@ -173,7 +132,6 @@ function loadQRImage(index, url) {
     const ctx = canvas.getContext('2d');
     const img = new Image();
     
-    // Важно для CORS
     img.crossOrigin = 'anonymous';
     
     img.onload = function() {
@@ -184,12 +142,50 @@ function loadQRImage(index, url) {
     };
     
     img.onerror = function() {
-        console.log(`Ошибка загрузки QR${index}, использую заглушку`);
-        // Если картинка не загрузилась - рисуем заглушку
-        generateSimpleQR(`qrCanvas${index}`, `QR ${index}`);
+        console.log(`Ошибка загрузки QR${index}, рисую заглушку`);
+        // Если картинка не загрузилась - рисуем красивую заглушку
+        drawQRPlaceholder(index);
     };
     
     img.src = url;
+}
+
+// Функция для рисования заглушки (если картинка не загрузилась)
+function drawQRPlaceholder(index) {
+    const canvas = document.getElementById(`qrCanvas${index}`);
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    canvas.width = 200;
+    canvas.height = 200;
+    
+    // Градиентный фон
+    const gradient = ctx.createLinearGradient(0, 0, 200, 200);
+    gradient.addColorStop(0, '#667eea');
+    gradient.addColorStop(1, '#764ba2');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 200, 200);
+    
+    // Рисуем узор
+    ctx.fillStyle = 'white';
+    for (let i = 0; i < 20; i++) {
+        for (let j = 0; j < 20; j++) {
+            if ((i + j) % 3 === 0) {
+                ctx.fillRect(i * 10, j * 10, 5, 5);
+            }
+        }
+    }
+    
+    // Эмодзи по центру
+    ctx.font = '60px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🚽', 100, 100);
+    
+    // Подпись
+    ctx.font = '20px Arial';
+    ctx.fillText(`QR-код ${index}`, 100, 160);
 }
 
 function downloadQR(qrId) {
@@ -230,7 +226,9 @@ function uploadQR(index) {
 function openGame() {
     const modal = document.getElementById('gameModal');
     modal.classList.add('active');
-    initGame();
+    if (typeof initGame === 'function') {
+        initGame();
+    }
 }
 
 function closeGame() {
@@ -243,9 +241,13 @@ function closeGame() {
 
 function loadHighScore() {
     const highScore = localStorage.getItem('toiletGameHighScore') || 0;
-    document.getElementById('highScore').textContent = highScore;
-    if (document.getElementById('gameHighScore')) {
-        document.getElementById('gameHighScore').textContent = highScore;
+    const highScoreElement = document.getElementById('highScore');
+    if (highScoreElement) {
+        highScoreElement.textContent = highScore;
+    }
+    const gameHighScore = document.getElementById('gameHighScore');
+    if (gameHighScore) {
+        gameHighScore.textContent = highScore;
     }
 }
 
@@ -253,10 +255,7 @@ function saveHighScore(score) {
     const currentHigh = parseInt(localStorage.getItem('toiletGameHighScore')) || 0;
     if (score > currentHigh) {
         localStorage.setItem('toiletGameHighScore', score);
-        document.getElementById('highScore').textContent = score;
-        if (document.getElementById('gameHighScore')) {
-            document.getElementById('gameHighScore').textContent = score;
-        }
+        loadHighScore();
     }
 }
 
@@ -273,7 +272,6 @@ function closeCertificate() {
 
 let uploadedPhoto = null;
 
-// Загрузка фото для сертификата
 const photoInput = document.getElementById('certificatePhoto');
 if (photoInput) {
     photoInput.addEventListener('change', function(e) {
@@ -300,17 +298,13 @@ function generateCertificate() {
     const canvas = document.getElementById('certificateCanvas');
     const ctx = canvas.getContext('2d');
     
-    // Размеры сертификата
     canvas.width = 1000;
     canvas.height = 700;
     
-    // Загружаем фоновое изображение
     const background = new Image();
     background.onload = function() {
-        // Рисуем фон
         ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
         
-        // Добавляем текст
         ctx.fillStyle = '#000';
         ctx.font = 'bold 48px Arial';
         ctx.textAlign = 'center';
@@ -336,7 +330,6 @@ function generateCertificate() {
         const date = new Date().toLocaleDateString('ru-RU');
         ctx.fillText(`Дата: ${date}`, canvas.width / 2, 580);
         
-        // Добавляем фото если есть
         if (uploadedPhoto && uploadedPhoto.complete) {
             const photoSize = 120;
             const photoX = 50;
@@ -351,25 +344,20 @@ function generateCertificate() {
             ctx.restore();
         }
         
-        // Показываем превью
         document.getElementById('certificatePreview').style.display = 'block';
     };
     
-    // Если нет gramota.jpg, используем градиент
     background.onerror = function() {
-        // Создаём красивый фон
         const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
         gradient.addColorStop(0, '#667eea');
         gradient.addColorStop(1, '#764ba2');
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Добавляем декоративную рамку
         ctx.strokeStyle = '#f4a261';
         ctx.lineWidth = 20;
         ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
         
-        // Продолжаем с текстом
         background.onload();
     };
     
@@ -431,7 +419,6 @@ function showEasterEgg(id) {
     `;
     
     modal.classList.add('active');
-    
     currentEasterEgg = (currentEasterEgg + 1) % easterEggMessages.length;
 }
 
@@ -440,7 +427,7 @@ function closeEasterEgg() {
     modal.classList.remove('active');
 }
 
-// ===== ЗАКРЫТИЕ МОДАЛЬНЫХ ОКОН ПО КЛИКУ ВНЕ =====
+// ===== ЗАКРЫТИЕ МОДАЛЬНЫХ ОКОН =====
 window.addEventListener('click', function(e) {
     if (e.target.classList.contains('modal')) {
         e.target.classList.remove('active');
