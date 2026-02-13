@@ -156,7 +156,7 @@ function generateQRCodes() {
     // ВАШИ РЕАЛЬНЫЕ ССЫЛКИ С POSTIMAGES
     const myImages = [
         'https://i.postimg.cc/WpCwBmBx/IMG-20260213-231252-849.jpg', // ваш QR-код
-        'https://i.postimg.cc/WpCwBmBx/IMG-20260213-231252-849.jpg', // пока та же, замените на свою
+        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg', // пока та же, замените на свою
         'https://i.postimg.cc/WpCwBmBx/IMG-20260213-231252-849.jpg'  // пока та же, замените на свою
     ];
     
