@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeSignatureSystem();
     updateCounter();
     loadHighScore();
-    generateQRCodes();
+    generateQRCodes(); // Загружаем QR-коды
 });
 
 // ===== СИСТЕМА ПОДПИСЕЙ =====
@@ -118,39 +118,114 @@ function createConfetti() {
     }
 }
 
-// ===== QR КОДЫ С ПРЯМЫМИ ССЫЛКАМИ =====
+// ===== QR КОДЫ =====
+// Функция для генерации простого QR (заглушка)
+function generateSimpleQR(canvasId, text) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    canvas.width = 200;
+    canvas.height = 200;
+    
+    // Белый фон
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, 200, 200);
+    
+    // Простой паттерн QR (для демонстрации)
+    ctx.fillStyle = 'black';
+    const size = 10;
+    for (let i = 0; i < 20; i++) {
+        for (let j = 0; j < 20; j++) {
+            if (Math.random() > 0.5) {
+                ctx.fillRect(i * size, j * size, size, size);
+            }
+        }
+    }
+    
+    // Центральный логотип
+    ctx.fillStyle = 'white';
+    ctx.fillRect(75, 75, 50, 50);
+    ctx.font = '30px Arial';
+    ctx.fillStyle = 'black';
+    ctx.textAlign = 'center';
+    ctx.fillText('🚽', 100, 108);
+}
+
 function generateQRCodes() {
-    // ЗДЕСЬ УКАЖИТЕ СВОИ ССЫЛКИ НА КАРТИНКИ
+    // ВАШИ РЕАЛЬНЫЕ ССЫЛКИ С POSTIMAGES
     const myImages = [
-        'https://i.postimg.cc/WpCwBmBx/IMG-20260213-231252-849.jpg',   // для первого QR (главная)
-        '',   // для второго QR (игра)
-        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg'    // для третьего QR (петиция)
+        'https://i.postimg.cc/WpCwBmBx/IMG-20260213-231252-849.jpg', // ваш QR-код
+        'https://i.postimg.cc/WpCwBmBx/IMG-20260213-231252-849.jpg', // пока та же, замените на свою
+        'https://i.postimg.cc/WpCwBmBx/IMG-20260213-231252-849.jpg'  // пока та же, замените на свою
     ];
     
-    // Загружаем каждую картинку в canvas
+    // Загружаем каждую картинку
     for (let i = 0; i < myImages.length; i++) {
-        loadImageToCanvas(`qrCanvas${i+1}`, myImages[i]);
+        loadQRImage(i + 1, myImages[i]);
     }
 }
 
-function loadImageToCanvas(canvasId, imageUrl) {
-    const canvas = document.getElementById(canvasId);
+function loadQRImage(index, url) {
+    const canvas = document.getElementById(`qrCanvas${index}`);
+    if (!canvas) return;
+    
     const ctx = canvas.getContext('2d');
     const img = new Image();
     
-    img.crossOrigin = "anonymous"; // важно для картинок с других сайтов
+    // Важно для CORS
+    img.crossOrigin = 'anonymous';
+    
     img.onload = function() {
         canvas.width = 200;
         canvas.height = 200;
         ctx.drawImage(img, 0, 0, 200, 200);
+        console.log(`QR${index} успешно загружен`);
     };
+    
     img.onerror = function() {
-        console.log('Ошибка загрузки картинки:', imageUrl);
+        console.log(`Ошибка загрузки QR${index}, использую заглушку`);
         // Если картинка не загрузилась - рисуем заглушку
-        generateSimpleQR(canvasId, 'fallback');
+        generateSimpleQR(`qrCanvas${index}`, `QR ${index}`);
     };
-    img.src = imageUrl;
+    
+    img.src = url;
 }
+
+function downloadQR(qrId) {
+    const container = document.getElementById(qrId);
+    const canvas = container.querySelector('canvas');
+    if (!canvas) return;
+    
+    const link = document.createElement('a');
+    link.download = `toilet-campaign-qr-${qrId}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+}
+
+function uploadQR(index) {
+    const input = document.getElementById(`qrUpload${index}`);
+    input.click();
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.getElementById(`qrCanvas${index}`);
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = 200;
+                    canvas.height = 200;
+                    ctx.drawImage(img, 0, 0, 200, 200);
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+}
+
 // ===== ИГРА =====
 function openGame() {
     const modal = document.getElementById('gameModal');
@@ -198,17 +273,21 @@ function closeCertificate() {
 
 let uploadedPhoto = null;
 
-document.getElementById('certificatePhoto')?.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            uploadedPhoto = new Image();
-            uploadedPhoto.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-});
+// Загрузка фото для сертификата
+const photoInput = document.getElementById('certificatePhoto');
+if (photoInput) {
+    photoInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                uploadedPhoto = new Image();
+                uploadedPhoto.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+}
 
 function generateCertificate() {
     const name = document.getElementById('certificateName').value.trim();
