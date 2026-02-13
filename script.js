@@ -113,8 +113,8 @@ function createConfetti() {
 function generateQRCodes() {
     // ⬇️⬇️⬇️ ЗДЕСЬ ВСТАВЛЯЙ СВОИ ТРИ ССЫЛКИ ⬇️⬇️⬇️
     const myImages = [
-        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg', // Ссылка на 1-й QR (Главная страница)
-        'https://i.postimg.cc/твойкод2/твоя-картинка2.jpg', // Ссылка на 2-й QR (Игра)
+        'https://i.postimg.cc/WpCwBmBx/IMG-20260213-231252-849.jpg', // Ссылка на 1-й QR (Главная страница)
+        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg', // Ссылка на 2-й QR (Игра)
         'https://i.postimg.cc/твойкод3/твоя-картинка3.jpg'  // Ссылка на 3-й QR (Петиция)
     ];
     // ⬆️⬆️⬆️ ЗДЕСЬ ВСТАВЛЯЙ СВОИ ТРИ ССЫЛКИ ⬆️⬆️⬆️
