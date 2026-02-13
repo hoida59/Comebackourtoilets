@@ -106,7 +106,7 @@ body {
 }
 
 .main-title {
-    font-size: 3em;
+    font-size: 2.5em;  /* уменьшено с 3em */
     font-weight: 900;
     color: var(--text-white);
     text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
@@ -409,6 +409,23 @@ body {
 .download-qr:hover {
     transform: scale(1.05);
     box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+}
+
+/* Новая кнопка загрузки QR */
+.upload-qr {
+    padding: 10px 25px;
+    background: var(--accent-gold);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+.upload-qr:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(244, 162, 97, 0.4);
 }
 
 /* ===== СЕКЦИЯ ИГРЫ ===== */
