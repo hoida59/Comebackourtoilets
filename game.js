@@ -63,7 +63,7 @@ class ToiletRunnerGame {
         });
         
         this.video.addEventListener('error', () => {
-            console.log('Ошибка загрузки видео, используем заглушку');
+            // Ошибка загрузки видео, используем заглушку — без вывода в консоль
             this.videoLoaded = false;
         });
         
