@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Верните туалет на 4 этаж! | Кампания протеста</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Фоновые элементы -->
+    <div class="background-pattern"></div>
+    
+    <!-- Основной контейнер -->
+    <div class="container">
+        
+        <!-- Шапка сайта -->
+        <header class="header">
+            <div class="toilet-icon">🚽</div>
+            <h1 class="main-title">ВЕРНИТЕ ТУАЛЕТ НА 4 ЭТАЖ!</h1>
+            <p class="subtitle">Наше право на комфорт не подлежит обсуждению</p>
+            <div class="protest-badge">✊ ПРОТЕСТ АКТИВЕН</div>
+        </header>
+
+        <!-- Секция с мотивацией -->
+        <section class="motivation-section">
+            <div class="motivation-card">
+                <h2>Почему это важно?</h2>
+                <ul class="reasons-list">
+                    <li>⏰ Экономия времени на переменах</li>
+                    <li>🏃 Меньше беготни по этажам</li>
+                    <li>📚 Больше времени на учёбу</li>
+                    <li>💪 Равные условия для всех</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Счётчик подписей -->
+        <section class="counter-section">
+            <div class="counter-card">
+                <h3>Нас уже:</h3>
+                <div class="counter-display" id="signatureCounter">0</div>
+                <p class="counter-label">человек поддерживают!</p>
+            </div>
+        </section>
+
+        <!-- Форма подписи -->
+        <section class="signature-section">
+            <h2>Поддержи кампанию!</h2>
+            <div class="signature-form">
+                <div class="checkbox-container">
+                    <input type="checkbox" id="supportCheckbox" class="custom-checkbox">
+                    <label for="supportCheckbox" class="checkbox-label">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-text">Я поддерживаю возвращение мужского туалета на 4 этаж!</span>
+                    </label>
+                </div>
+                <button id="signButton" class="sign-button" disabled>
+                    <span class="button-icon">✍️</span>
+                    Подписать петицию
+                </button>
+                <p class="signature-status" id="signatureStatus"></p>
+            </div>
+        </section>
+
+        <!-- QR коды -->
+        <section class="qr-section">
+            <h2>Распространяй информацию!</h2>
+            <p class="qr-description">Распечатай эти QR-коды и развесь по школе</p>
+            <div class="qr-grid">
+                <div class="qr-card">
+                    <div class="qr-placeholder" id="qr1">
+                        <canvas id="qrCanvas1"></canvas>
+                    </div>
+                    <p>Главная страница</p>
+                    <button class="download-qr" onclick="downloadQR('qr1')">Скачать</button>
+                </div>
+                <div class="qr-card">
+                    <div class="qr-placeholder" id="qr2">
+                        <canvas id="qrCanvas2"></canvas>
+                    </div>
+                    <p>Игра</p>
+                    <button class="download-qr" onclick="downloadQR('qr2')">Скачать</button>
+                </div>
+                <div class="qr-card">
+                    <div class="qr-placeholder" id="qr3">
+                        <canvas id="qrCanvas3"></canvas>
+                    </div>
+                    <p>Петиция</p>
+                    <button class="download-qr" onclick="downloadQR('qr3')">Скачать</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Кнопка игры -->
+        <section class="game-section">
+            <div class="game-promo">
+                <h2>🎮 Сыграй в игру!</h2>
+                <p>Помоги герою преодолеть туалетные препятствия и получи сертификат поддержки!</p>
+                <button class="game-button" onclick="openGame()">
+                    <span class="game-icon">🚀</span>
+                    НАЧАТЬ ИГРУ
+                </button>
+                <div class="high-score">
+                    Рекорд: <span id="highScore">0</span> очков
+                </div>
+            </div>
+        </section>
+
+        <!-- Пасхалки -->
+        <section class="easter-eggs">
+            <div class="easter-egg" onclick="showEasterEgg(1)">🔍</div>
+        </section>
+
+        <!-- Футер -->
+        <footer class="footer">
+            <p>Сделано студентами для студентов 💪</p>
+            <p class="footer-slogan">"Каждый этаж заслуживает туалет!"</p>
+        </footer>
+
+    </div>
+
+    <!-- Модальное окно игры -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content game-container">
+            <button class="close-modal" onclick="closeGame()">✕</button>
+            <div class="game-header">
+                <h2>🚽 Туалетный забег</h2>
+                <div class="game-stats">
+                    <div class="stat">Счёт: <span id="gameScore">0</span></div>
+                    <div class="stat">Рекорд: <span id="gameHighScore">0</span></div>
+                </div>
+            </div>
+            <canvas id="gameCanvas"></canvas>
+            <div class="game-controls">
+                <button id="startButton" class="control-button">СТАРТ</button>
+                <button id="restartButton" class="control-button" style="display:none;">ЗАНОВО</button>
+            </div>
+            <p class="game-instruction">Нажми ПРОБЕЛ или кликни для прыжка</p>
+        </div>
+    </div>
+
+    <!-- Модальное окно сертификата -->
+    <div id="certificateModal" class="modal">
+        <div class="modal-content certificate-container">
+            <button class="close-modal" onclick="closeCertificate()">✕</button>
+            <h2>🏆 Поздравляем! Ты получил сертификат!</h2>
+            
+            <div class="certificate-form">
+                <div class="form-group">
+                    <label>Твоё имя:</label>
+                    <input type="text" id="certificateName" placeholder="Введи своё имя">
+                </div>
+                <div class="form-group">
+                    <label>Твоё фото (опционально):</label>
+                    <input type="file" id="certificatePhoto" accept="image/*">
+                </div>
+                <button class="generate-button" onclick="generateCertificate()">
+                    Создать сертификат
+                </button>
+            </div>
+
+            <div id="certificatePreview" class="certificate-preview" style="display:none;">
+                <canvas id="certificateCanvas"></canvas>
+                <div class="certificate-actions">
+                    <button class="action-button" onclick="downloadCertificate()">
+                        📥 Скачать
+                    </button>
+                    <button class="action-button" onclick="shareCertificate()">
+                        📤 Поделиться
+                    </button>
+                </div>
+                <div class="certificate-message">
+                    <p><strong>🔥 Теперь твоя миссия:</strong></p>
+                    <p>Распечатай и развесь объявления о возвращении туалета на 4 этаж!</p>
+                    <p>Покажи этот сертификат друзьям и призови их поддержать кампанию!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно пасхалки -->
+    <div id="easterEggModal" class="modal">
+        <div class="modal-content easter-egg-content">
+            <button class="close-modal" onclick="closeEasterEgg()">✕</button>
+            <div id="easterEggText"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
