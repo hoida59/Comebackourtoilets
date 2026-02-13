@@ -118,80 +118,39 @@ function createConfetti() {
     }
 }
 
-// ===== QR КОДЫ =====
+// ===== QR КОДЫ С ПРЯМЫМИ ССЫЛКАМИ =====
 function generateQRCodes() {
-    const currentURL = window.location.href;
-    const gameURL = currentURL + '#game';
-    const petitionURL = currentURL + '#petition';
+    // ЗДЕСЬ УКАЖИТЕ СВОИ ССЫЛКИ НА КАРТИНКИ
+    const myImages = [
+        'https://example.com/my-qr1.png',   // для первого QR (главная)
+        'https://example.com/my-qr2.png',   // для второго QR (игра)
+        'https://example.com/my-qr3.png'    // для третьего QR (петиция)
+    ];
     
-    // Простая генерация QR-кодов (в реальности используйте библиотеку типа qrcode.js)
-    generateSimpleQR('qrCanvas1', currentURL);
-    generateSimpleQR('qrCanvas2', gameURL);
-    generateSimpleQR('qrCanvas3', petitionURL);
+    // Загружаем каждую картинку в canvas
+    for (let i = 0; i < myImages.length; i++) {
+        loadImageToCanvas(`qrCanvas${i+1}`, myImages[i]);
+    }
 }
 
-function generateSimpleQR(canvasId, text) {
+function loadImageToCanvas(canvasId, imageUrl) {
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext('2d');
-    canvas.width = 200;
-    canvas.height = 200;
+    const img = new Image();
     
-    // Белый фон
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, 200, 200);
-    
-    // Простой паттерн QR (для демонстрации)
-    ctx.fillStyle = 'black';
-    const size = 10;
-    for (let i = 0; i < 20; i++) {
-        for (let j = 0; j < 20; j++) {
-            if (Math.random() > 0.5) {
-                ctx.fillRect(i * size, j * size, size, size);
-            }
-        }
-    }
-    
-    // Центральный логотип
-    ctx.fillStyle = 'white';
-    ctx.fillRect(75, 75, 50, 50);
-    ctx.font = '30px Arial';
-    ctx.fillStyle = 'black';
-    ctx.textAlign = 'center';
-    ctx.fillText('🚽', 100, 108);
-}
-
-function downloadQR(qrId) {
-    const canvas = document.querySelector(`#${qrId} canvas`);
-    const link = document.createElement('a');
-    link.download = `toilet-campaign-qr-${qrId}.png`;
-    link.href = canvas.toDataURL();
-    link.click();
-}
-
-// Функция загрузки своего QR-изображения
-function uploadQR(index) {
-    const input = document.getElementById(`qrUpload${index}`);
-    input.click();
-    input.onchange = function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.getElementById(`qrCanvas${index}`);
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = 200;
-                    canvas.height = 200;
-                    ctx.drawImage(img, 0, 0, 200, 200);
-                };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
+    img.crossOrigin = "anonymous"; // важно для картинок с других сайтов
+    img.onload = function() {
+        canvas.width = 200;
+        canvas.height = 200;
+        ctx.drawImage(img, 0, 0, 200, 200);
     };
+    img.onerror = function() {
+        console.log('Ошибка загрузки картинки:', imageUrl);
+        // Если картинка не загрузилась - рисуем заглушку
+        generateSimpleQR(canvasId, 'fallback');
+    };
+    img.src = imageUrl;
 }
-
 // ===== ИГРА =====
 function openGame() {
     const modal = document.getElementById('gameModal');
