@@ -44,15 +44,13 @@ class ToiletRunnerGame {
         this.video = null;
         this.videoLoaded = false;
         
-        // ТИПЫ ПРЕПЯТСТВИЙ (МОЖНО МЕНЯТЬ)
+        // ТИПЫ ПРЕПЯТСТВИЙ
         this.obstacleTypes = [
             { name: '🚽 Унитаз', emoji: '🚽', width: 40, height: 60 },
             { name: '🚻 Писсуар', emoji: '🚻', width: 50, height: 70 },
             { name: '💩 Какашка', emoji: '💩', width: 35, height: 40 },
             { name: '🧻 Туалетная бумага', emoji: '🧻', width: 30, height: 50 },
-            { name: '💧 Лужа', emoji: '💧', width: 45, height: 20 },
-            { name: '🚰 Рукомойник', emoji: '🚰', width: 55, height: 50 },
-            { name: '🧼 Мыло', emoji: '🧼', width: 25, height: 25 }
+            { name: '💧 Лужа', emoji: '💧', width: 45, height: 20 }
         ];
         
         // Загружаем видео
@@ -66,22 +64,26 @@ class ToiletRunnerGame {
         this.video = document.createElement('video');
         
         // ⬇️⬇️⬇️ ТВОЯ ССЫЛКА НА ВИДЕО С GITHUB ⬇️⬇️⬇️
+        // ВНИМАНИЕ: замени НАЗВАНИЕ_ФАЙЛА.mp4 на реальное имя твоего видео!
         const videoUrl = 'https://github.com/hoida59/Comebackourtoilets/raw/main/lv_0_20260125005509%20(2)%20(1).mp4';
-        // ⬆️⬆️⬆️ ЭТО РАБОЧАЯ ССЫЛКА ⬆️⬆️⬆️
+        // ⬆️⬆️⬆️ ЭТО ДОЛЖНА БЫТЬ ПРЯМАЯ ССЫЛКА НА ВИДЕО ⬆️⬆️⬆️
+        
+        console.log('Загружаю видео по ссылке:', videoUrl); // Для отладки
         
         this.video.src = videoUrl;
         this.video.loop = true;
-        this.video.muted = true; // Обязательно для автовоспроизведения
+        this.video.muted = true;
         this.video.playsInline = true;
         this.video.crossOrigin = 'anonymous';
         
         this.video.addEventListener('loadeddata', () => {
             this.videoLoaded = true;
-            console.log('✅ Видео загружено');
+            console.log('✅ Видео загружено и готово к воспроизведению');
         });
         
         this.video.addEventListener('error', (e) => {
             console.log('❌ Ошибка загрузки видео, использую заглушку');
+            console.log('Код ошибки:', this.video.error ? this.video.error.code : 'неизвестно');
             this.videoLoaded = false;
         });
         
@@ -129,8 +131,11 @@ class ToiletRunnerGame {
         this.player.onGround = true;
         this.certificateUnlocked = false;
         
+        // Пытаемся воспроизвести видео
         if (this.videoLoaded) {
-            this.video.play().catch(e => console.log('Ошибка воспроизведения видео:', e));
+            this.video.play()
+                .then(() => console.log('▶️ Видео воспроизводится'))
+                .catch(e => console.log('❌ Не удалось воспроизвести видео:', e));
         }
         
         this.gameLoop();
@@ -200,7 +205,6 @@ class ToiletRunnerGame {
     }
     
     createObstacle() {
-        // Выбираем случайное препятствие из списка
         const type = this.obstacleTypes[Math.floor(Math.random() * this.obstacleTypes.length)];
         
         this.obstacles.push({
@@ -266,7 +270,7 @@ class ToiletRunnerGame {
     }
     
     drawPlayerPlaceholder() {
-        // Красивый игрок-заглушка
+        // Заглушка если видео не загрузилось
         this.ctx.fillStyle = '#667eea';
         this.ctx.fillRect(this.player.x, this.player.y, this.player.width, this.player.height);
         
@@ -282,6 +286,11 @@ class ToiletRunnerGame {
         this.ctx.lineWidth = 3;
         this.ctx.arc(this.player.x + 30, this.player.y + 35, 10, 0, Math.PI);
         this.ctx.stroke();
+        
+        // Подпись
+        this.ctx.font = '12px Arial';
+        this.ctx.fillStyle = 'white';
+        this.ctx.fillText('Видео не загрузилось', this.player.x, this.player.y - 10);
     }
     
     drawClouds() {
@@ -304,16 +313,13 @@ class ToiletRunnerGame {
     drawObstacle(obstacle) {
         const { x, y, width, height, emoji } = obstacle;
         
-        // Прозрачный фон
         this.ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
         this.ctx.fillRect(x, y, width, height);
         
-        // Обводка
         this.ctx.strokeStyle = '#333';
         this.ctx.lineWidth = 2;
         this.ctx.strokeRect(x, y, width, height);
         
-        // Эмодзи
         this.ctx.font = `${height - 10}px Arial`;
         this.ctx.fillStyle = '#000';
         this.ctx.textAlign = 'center';
