@@ -122,9 +122,9 @@ function createConfetti() {
 function generateQRCodes() {
     // ЗДЕСЬ УКАЖИТЕ СВОИ ССЫЛКИ НА КАРТИНКИ
     const myImages = [
-        'https://example.com/my-qr1.png',   // для первого QR (главная)
-        'https://example.com/my-qr2.png',   // для второго QR (игра)
-        'https://example.com/my-qr3.png'    // для третьего QR (петиция)
+        'https://i.postimg.cc/WpCwBmBx/IMG-20260213-231252-849.jpg',   // для первого QR (главная)
+        '',   // для второго QR (игра)
+        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg'    // для третьего QR (петиция)
     ];
     
     // Загружаем каждую картинку в canvas
