@@ -57,7 +57,7 @@ class ToiletRunnerGame {
         this.videoLoaded = false;
         
         // ⬇️⬇️⬇️ УКАЖИ ИМЯ СВОЕГО ВИДЕОФАЙЛА ⬇️⬇️⬇️
-        const videoFileName = 'player.mp4'; // если назвал иначе — исправь здесь
+        const videoFileName = 'https://raw.githubusercontent.com/hoida59/Comebackourtoilets/refs/heads/main/player.mp4'; // если назвал иначе — исправь здесь
         // ⬆️⬆️⬆️ ЗАМЕНИ НА СВОЁ ИМЯ ⬆️⬆️⬆️
         
         this.video.src = videoFileName;
