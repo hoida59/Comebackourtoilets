@@ -66,34 +66,34 @@
             </div>
         </section>
 
-        <!-- QR-КОДЫ: Распространяй информацию! (фраза изменена, кнопки загрузки удалены) -->
-        <section class="qr-section">
-            <h2>Распространяй информацию!</h2>
-            <p class="qr-description">Зайди в туалет на 3 на перемене и получи свой QR-код.</p>
-            <div class="qr-grid">
-                <div class="qr-card">
-                    <div class="qr-placeholder" id="qr1">
-                        <canvas id="qrCanvas1"></canvas>
-                    </div>
-                    <p>ГЛАВНАЯ СТРАНИЦА</p>
-                    <button class="download-qr" onclick="downloadQR('qr1')">Скачать</button>
-                </div>
-                <div class="qr-card">
-                    <div class="qr-placeholder" id="qr2">
-                        <canvas id="qrCanvas2"></canvas>
-                    </div>
-                    <p>ТГ-КАНАЛ</p>
-                    <button class="download-qr" onclick="downloadQR('qr2')">Скачать</button>
-                </div>
-                <div class="qr-card">
-                    <div class="qr-placeholder" id="qr3">
-                        <canvas id="qrCanvas3"></canvas>
-                    </div>
-                    <p>БОНУС</p>
-                    <button class="download-qr" onclick="downloadQR('qr3')">Скачать</button>
-                </div>
+<!-- QR-КОДЫ: Распространяй информацию! -->
+<section class="qr-section">
+    <h2>Распространяй информацию!</h2>
+    <p class="qr-description">Зайди в туалет на 3 на перемене и получи свой QR-код.</p>
+    <div class="qr-grid">
+        <div class="qr-card">
+            <div class="qr-placeholder" id="qr1">
+                <canvas id="qrCanvas1"></canvas>
             </div>
-        </section>
+            <p>Главная страница</p> <!-- Оставляем без изменений -->
+            <button class="download-qr" onclick="downloadQR('qr1')">Скачать</button>
+        </div>
+        <div class="qr-card">
+            <div class="qr-placeholder" id="qr2">
+                <canvas id="qrCanvas2"></canvas>
+            </div>
+            <p>ТГ-КАНАЛ</p> <!-- Было "Игра", меняем на "ТГ-КАНАЛ" -->
+            <button class="download-qr" onclick="downloadQR('qr2')">Скачать</button>
+        </div>
+        <div class="qr-card">
+            <div class="qr-placeholder" id="qr3">
+                <canvas id="qrCanvas3"></canvas>
+            </div>
+            <p>Бонус</p> <!-- Было "Петиция", меняем на "Бонус" -->
+            <button class="download-qr" onclick="downloadQR('qr3')">Скачать</button>
+        </div>
+    </div>
+</section>
 
         <!-- МОТИВАЦИЯ: Почему это важно? -->
         <section class="motivation-section">
