@@ -1,4 +1,4 @@
-// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (ПРЫЖКИ + ЗВУК) =====
+// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (С МУЗЫКОЙ) =====
 
 // Элементы DOM
 const canvas = document.getElementById('gameCanvas');
@@ -8,7 +8,7 @@ const gameHighScoreEl = document.getElementById('gameHighScore');
 const startButton = document.getElementById('startButton');
 const restartButton = document.getElementById('restartButton');
 
-// Убедимся, что canvas может получать фокус
+// Чтобы canvas мог получать события клавиатуры
 canvas.setAttribute('tabindex', '0');
 
 let gameInstance = null;
@@ -29,9 +29,9 @@ class ToiletRunnerGame {
         this.frameCount = 0;
         this.certificateUnlocked = false;
         
-        // ФИЗИКА: усиливаем прыжок и уменьшаем гравитацию
-        this.gravity = 0.3;          // было 0.4
-        this.jumpPower = -18;         // было -15
+        // Физика (усиленный прыжок)
+        this.gravity = 0.3;
+        this.jumpPower = -18;
         
         // Игрок
         this.player = {
@@ -55,7 +55,7 @@ class ToiletRunnerGame {
         
         // ========== ВИДЕО ==========
         this.video = document.createElement('video');
-        this.video.src = 'video.mp4'; // Убедись, что файл есть в корне
+        this.video.src = 'video.mp4'; // убедись, что файл есть в корне
         this.video.loop = true;
         this.video.muted = true;
         this.video.playsInline = true;
@@ -77,11 +77,19 @@ class ToiletRunnerGame {
         this.video.load();
         
         // ========== ЗВУКИ ==========
-        this.jumpSound = new Audio('sounds/jump.mp3'); // Создай папку sounds и положи файл
+        // Звук прыжка
+        this.jumpSound = new Audio('jump.mp3');
         this.jumpSound.volume = 0.3;
         
-        this.crashSound = new Audio('sounds/crash.mp3');
+        // Звук столкновения
+        this.crashSound = new Audio('crash.mp3');
         this.crashSound.volume = 0.5;
+        
+        // ФОНОВАЯ МУЗЫКА
+        this.bgMusic = new Audio('background.mp3');
+        this.bgMusic.loop = true;        // зацикливаем
+        this.bgMusic.volume = 0.2;       // негромко, чтобы не заглушать звуки
+        // Не вызываем play() сейчас – запустим при старте игры
         
         // ========== ПРЕПЯТСТВИЯ ==========
         this.obstacleTypes = [
@@ -163,9 +171,9 @@ class ToiletRunnerGame {
             this.player.onGround = false;
             this.player.ducking = false;
             
-            // Воспроизводим звук прыжка
+            // Звук прыжка
             this.jumpSound.currentTime = 0;
-            this.jumpSound.play().catch(e => console.log('Звук не воспроизведён:', e));
+            this.jumpSound.play().catch(e => console.log('Звук прыжка не воспроизведён:', e));
             
             console.log('🚀 Прыжок! velocityY =', this.player.velocityY);
         }
@@ -190,10 +198,15 @@ class ToiletRunnerGame {
         this.player.ducking = false;
         this.certificateUnlocked = false;
         
+        // Запускаем видео
         if (this.videoLoaded) {
             this.video.currentTime = 0;
             this.video.play().catch(e => console.log('Видео не играет:', e));
         }
+        
+        // ЗАПУСКАЕМ ФОНОВУЮ МУЗЫКУ
+        this.bgMusic.currentTime = 0;
+        this.bgMusic.play().catch(e => console.log('Фоновая музыка не запустилась:', e));
         
         this.gameLoop();
     }
@@ -201,6 +214,9 @@ class ToiletRunnerGame {
     stop() {
         this.isRunning = false;
         if (this.video) this.video.pause();
+        
+        // СТАВИМ МУЗЫКУ НА ПАУЗУ
+        this.bgMusic.pause();
     }
     
     reset() {
@@ -255,6 +271,8 @@ class ToiletRunnerGame {
                 continue;
             }
             if (this.checkCollision(this.player, obs)) {
+                // Звук столкновения
+                this.crashSound.currentTime = 0;
                 this.crashSound.play().catch(e => {});
                 this.endGame();
             }
@@ -374,6 +392,10 @@ class ToiletRunnerGame {
         this.gameOver = true;
         this.isRunning = false;
         this.video.pause();
+        
+        // Останавливаем фоновую музыку
+        this.bgMusic.pause();
+        this.bgMusic.currentTime = 0; // сбрасываем на начало
         
         const highScore = parseInt(localStorage.getItem('toiletGameHighScore')) || 0;
         if (this.score > highScore) {
