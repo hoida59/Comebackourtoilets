@@ -1,4 +1,4 @@
-// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (С РУЛЕТКОЙ) =====
+// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (С ПРИЗОМ) =====
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -128,7 +128,7 @@ class ToiletRunnerGame {
         this.player.y = this.groundY - this.player.height;
         this.player.velocityY = 0;
         this.player.onGround = true;
-        this.prizeUnlocked = false; // сбрасываем флаг при новой игре
+        this.prizeUnlocked = false;
         
         if (this.videoLoaded) {
             this.video.currentTime = 0;
@@ -272,12 +272,6 @@ class ToiletRunnerGame {
             this.drawPlaceholder();
         }
         
-        // отладка (можно убрать)
-        this.ctx.fillStyle = '#fff';
-        this.ctx.font = '14px Arial';
-        this.ctx.fillText(`onGround: ${this.player.onGround}`, 10, 20);
-        this.ctx.fillText(`y: ${Math.round(this.player.y)}`, 10, 40);
-        
         if (this.gameOver) {
             this.ctx.fillStyle = 'rgba(0,0,0,0.8)';
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -326,10 +320,36 @@ class ToiletRunnerGame {
         restartButton.style.display = 'inline-block';
     }
     
-unlockPrize() {
-    this.stop(); // останавливаем игру
-    setTimeout(() => {
-        closeGame(); // закрываем модальное окно игры
-        openPrizeWheel(); // открываем рулетку
-    }, 500);
+    unlockPrize() {
+        this.stop(); // останавливаем игру
+        const prizes = ['Карандаш', 'Ручка', 'Ластик', 'Тетрадь'];
+        const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
+        setTimeout(() => {
+            closeGame(); // закрываем модальное окно игры
+            openPrize(randomPrize); // показываем приз
+        }, 500);
+    }
+    
+    gameLoop() {
+        if (!this.isRunning) return;
+        this.update();
+        this.draw();
+        requestAnimationFrame(() => this.gameLoop());
+    }
+}
+
+function initGame() {
+    if (!gameInstance) {
+        gameInstance = new ToiletRunnerGame('gameCanvas');
+        window.gameInstance = gameInstance;
+    }
+    startButton.onclick = () => {
+        gameInstance.start();
+        startButton.style.display = 'none';
+        restartButton.style.display = 'none';
+    };
+    restartButton.onclick = () => {
+        gameInstance.reset();
+        restartButton.style.display = 'none';
+    };
 }
