@@ -1,4 +1,4 @@
-// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (С ПРИЗОМ) =====
+// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (С КОЛЕСОМ) =====
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -322,11 +322,9 @@ class ToiletRunnerGame {
     
     unlockPrize() {
         this.stop(); // останавливаем игру
-        const prizes = ['Карандаш', 'Ручка', 'Ластик', 'Тетрадь'];
-        const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
         setTimeout(() => {
             closeGame(); // закрываем модальное окно игры
-            openPrize(randomPrize); // показываем приз
+            openWheel(); // открываем колесо
         }, 500);
     }
     
