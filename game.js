@@ -1,4 +1,4 @@
-// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (С МУЗЫКОЙ) =====
+// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (СТАРАЯ ФИЗИКА + МУЗЫКА) =====
 
 // Элементы DOM
 const canvas = document.getElementById('gameCanvas');
@@ -29,9 +29,9 @@ class ToiletRunnerGame {
         this.frameCount = 0;
         this.certificateUnlocked = false;
         
-        // Физика (усиленный прыжок)
-        this.gravity = 0.3;
-        this.jumpPower = -18;
+        // ===== ФИЗИКА КАК В СТАРОМ КОДЕ =====
+        this.gravity = 0.2;          // как в динозавре
+        this.jumpPower = -8;          // как в динозавре
         
         // Игрок
         this.player = {
@@ -40,7 +40,7 @@ class ToiletRunnerGame {
             width: 60,
             height: 60,
             velocityY: 0,
-            onGround: false,
+            jumping: false,           // флаг прыжка (как в старом коде)
             ducking: false
         };
         
@@ -77,19 +77,15 @@ class ToiletRunnerGame {
         this.video.load();
         
         // ========== ЗВУКИ ==========
-        // Звук прыжка
         this.jumpSound = new Audio('jump.mp3');
         this.jumpSound.volume = 0.3;
         
-        // Звук столкновения
         this.crashSound = new Audio('crash.mp3');
         this.crashSound.volume = 0.5;
         
-        // ФОНОВАЯ МУЗЫКА
         this.bgMusic = new Audio('background.mp3');
-        this.bgMusic.loop = true;        // зацикливаем
-        this.bgMusic.volume = 0.2;       // негромко, чтобы не заглушать звуки
-        // Не вызываем play() сейчас – запустим при старте игры
+        this.bgMusic.loop = true;
+        this.bgMusic.volume = 0.2;
         
         // ========== ПРЕПЯТСТВИЯ ==========
         this.obstacleTypes = [
@@ -164,18 +160,17 @@ class ToiletRunnerGame {
         });
     }
     
-    // ================== ПРЫЖОК ==================
+    // ================== ПРЫЖОК (КАК В СТАРОМ КОДЕ) ==================
     jump() {
-        if (this.player.onGround) {
+        if (!this.player.jumping) {   // если не в прыжке
+            this.player.jumping = true;
             this.player.velocityY = this.jumpPower;
-            this.player.onGround = false;
             this.player.ducking = false;
             
-            // Звук прыжка
             this.jumpSound.currentTime = 0;
             this.jumpSound.play().catch(e => console.log('Звук прыжка не воспроизведён:', e));
             
-            console.log('🚀 Прыжок! velocityY =', this.player.velocityY);
+            console.log('🚀 Прыжок!');
         }
     }
     
@@ -194,17 +189,15 @@ class ToiletRunnerGame {
         this.frameCount = 0;
         this.player.y = this.groundY - this.player.height;
         this.player.velocityY = 0;
-        this.player.onGround = true;
+        this.player.jumping = false;
         this.player.ducking = false;
         this.certificateUnlocked = false;
         
-        // Запускаем видео
         if (this.videoLoaded) {
             this.video.currentTime = 0;
             this.video.play().catch(e => console.log('Видео не играет:', e));
         }
         
-        // ЗАПУСКАЕМ ФОНОВУЮ МУЗЫКУ
         this.bgMusic.currentTime = 0;
         this.bgMusic.play().catch(e => console.log('Фоновая музыка не запустилась:', e));
         
@@ -214,8 +207,6 @@ class ToiletRunnerGame {
     stop() {
         this.isRunning = false;
         if (this.video) this.video.pause();
-        
-        // СТАВИМ МУЗЫКУ НА ПАУЗУ
         this.bgMusic.pause();
     }
     
@@ -236,21 +227,21 @@ class ToiletRunnerGame {
             this.unlockCertificate();
         }
         
-        // Физика
-        this.player.velocityY += this.gravity;
-        this.player.y += this.player.velocityY;
-        
-        // Проверка земли
-        if (this.player.y >= this.groundY - this.player.height) {
-            this.player.y = this.groundY - this.player.height;
-            this.player.velocityY = 0;
-            this.player.onGround = true;
-        } else {
-            this.player.onGround = false;
+        // ===== ФИЗИКА ПРЫЖКА (КАК В СТАРОМ КОДЕ) =====
+        if (this.player.jumping) {
+            this.player.velocityY += this.gravity;
+            this.player.y += this.player.velocityY;
+            
+            // Приземление
+            if (this.player.y >= this.groundY - this.player.height) {
+                this.player.y = this.groundY - this.player.height;
+                this.player.jumping = false;
+                this.player.velocityY = 0;
+            }
         }
         
-        // Пригибание
-        if (this.player.ducking && this.player.onGround) {
+        // Пригибание (только если на земле)
+        if (this.player.ducking && !this.player.jumping) {
             this.player.height = 40;
             this.player.y = this.groundY - this.player.height;
         } else {
@@ -271,7 +262,6 @@ class ToiletRunnerGame {
                 continue;
             }
             if (this.checkCollision(this.player, obs)) {
-                // Звук столкновения
                 this.crashSound.currentTime = 0;
                 this.crashSound.play().catch(e => {});
                 this.endGame();
@@ -392,10 +382,8 @@ class ToiletRunnerGame {
         this.gameOver = true;
         this.isRunning = false;
         this.video.pause();
-        
-        // Останавливаем фоновую музыку
         this.bgMusic.pause();
-        this.bgMusic.currentTime = 0; // сбрасываем на начало
+        this.bgMusic.currentTime = 0;
         
         const highScore = parseInt(localStorage.getItem('toiletGameHighScore')) || 0;
         if (this.score > highScore) {
