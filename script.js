@@ -210,4 +210,58 @@ window.addEventListener('click', (e) => {
         e.target.classList.remove('active');
         if (window.gameInstance) window.gameInstance.stop();
     }
+    // ===== РУЛЕТКА (ВРАЩАЮЩЕЕСЯ КОЛЕСО) =====
+const prizes = ['Карандаш', 'Ручка', 'Ластик', 'Тетрадь'];
+let wheelSpinning = false;
+
+function openPrizeWheel() {
+    const modal = document.getElementById('prizeWheelModal');
+    const wheel = document.getElementById('prizeWheel');
+    const resultDiv = document.getElementById('wheelResult');
+    const messageDiv = document.querySelector('.prize-message');
+    const spinBtn = document.getElementById('spinWheelBtn');
+    
+    // Сбрасываем состояние
+    wheel.style.transform = 'rotate(0deg)';
+    resultDiv.style.display = 'none';
+    messageDiv.style.display = 'none';
+    spinBtn.style.display = 'inline-block';
+    spinBtn.disabled = false;
+    wheelSpinning = false;
+    
+    modal.classList.add('active');
+}
+
+function closePrizeWheel() {
+    document.getElementById('prizeWheelModal').classList.remove('active');
+}
+
+function spinWheel() {
+    if (wheelSpinning) return;
+    
+    const wheel = document.getElementById('prizeWheel');
+    const resultDiv = document.getElementById('wheelResult');
+    const messageDiv = document.querySelector('.prize-message');
+    const spinBtn = document.getElementById('spinWheelBtn');
+    
+    wheelSpinning = true;
+    spinBtn.disabled = true;
+    
+    // Выбираем случайный приз
+    const randomIndex = Math.floor(Math.random() * prizes.length);
+    // Каждый сектор занимает 90°. Чтобы указатель (сверху) указывал на середину сектора,
+    // нужно повернуть колесо на угол: -(randomIndex * 90 + 45) + 360 * 5 (5 полных оборотов)
+    const targetAngle = -(randomIndex * 90 + 45) + 360 * 5;
+    
+    wheel.style.transform = `rotate(${targetAngle}deg)`;
+    
+    setTimeout(() => {
+        resultDiv.textContent = `🎉 Ты выиграл: ${prizes[randomIndex]}!`;
+        resultDiv.style.display = 'block';
+        messageDiv.style.display = 'block';
+        spinBtn.style.display = 'none';
+        wheelSpinning = false;
+        createConfetti(); // добавим конфетти для радости
+    }, 3000); // длительность анимации должна совпадать с transition в CSS
+}
 });
