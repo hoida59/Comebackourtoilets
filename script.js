@@ -92,12 +92,12 @@ function createConfetti() {
 }
 
 // ===== QR КОДЫ =====
-// ВСТАВЬТЕ СВОИ ССЫЛКИ НА КАРТИНКИ QR-КОДОВ
+// ⬇️⬇️⬇️ СЮДА ВСТАВЛЯЙ СВОИ ССЫЛКИ НА КАРТИНКИ QR ⬇️⬇️⬇️
 function generateQRCodes() {
     const myImages = [
-        'https://i.postimg.cc/your-code-1/your-image-1.jpg', // для "Главная страница"
-        'https://i.postimg.cc/your-code-2/your-image-2.jpg', // для "ТГ-КАНАЛ"
-        'https://i.postimg.cc/your-code-3/your-image-3.jpg'  // для "Бонус"
+        'https://i.postimg.cc/your-code-1/your-image-1.jpg', // Главная страница
+        'https://i.postimg.cc/your-code-2/your-image-2.jpg', // ТГ-КАНАЛ
+        'https://i.postimg.cc/your-code-3/your-image-3.jpg'  // Бонус
     ];
 
     for (let i = 0; i < myImages.length; i++) {
@@ -136,7 +136,7 @@ function downloadQR(qrId) {
     link.click();
 }
 
-// ===== ИГРА =====
+// ===== ИГРА (ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ) =====
 function openGame() {
     document.getElementById('gameModal').classList.add('active');
     if (typeof initGame === 'function') initGame();
@@ -163,7 +163,7 @@ function saveHighScore(score) {
     }
 }
 
-// ===== РУЛЕТКА (ВМЕСТО СЕРТИФИКАТА) =====
+// ===== ПРИЗ (ПРОСТАЯ РУЛЕТКА) =====
 const prizes = ['Карандаш', 'Ручка', 'Ластик', 'Тетрадь'];
 
 function openPrize(prize) {
@@ -175,8 +175,7 @@ function openPrize(prize) {
         <p style="margin-top: 20px;">Ты выиграл(а) этот приз!</p>
     `;
     modal.classList.add('active');
-    // Небольшая анимация "рулетки"
-    createConfetti(); // добавим конфетти для радости
+    createConfetti(); // праздничное настроение
 }
 
 function closePrize() {
@@ -210,58 +209,4 @@ window.addEventListener('click', (e) => {
         e.target.classList.remove('active');
         if (window.gameInstance) window.gameInstance.stop();
     }
-    // ===== РУЛЕТКА (ВРАЩАЮЩЕЕСЯ КОЛЕСО) =====
-const prizes = ['Карандаш', 'Ручка', 'Ластик', 'Тетрадь'];
-let wheelSpinning = false;
-
-function openPrizeWheel() {
-    const modal = document.getElementById('prizeWheelModal');
-    const wheel = document.getElementById('prizeWheel');
-    const resultDiv = document.getElementById('wheelResult');
-    const messageDiv = document.querySelector('.prize-message');
-    const spinBtn = document.getElementById('spinWheelBtn');
-    
-    // Сбрасываем состояние
-    wheel.style.transform = 'rotate(0deg)';
-    resultDiv.style.display = 'none';
-    messageDiv.style.display = 'none';
-    spinBtn.style.display = 'inline-block';
-    spinBtn.disabled = false;
-    wheelSpinning = false;
-    
-    modal.classList.add('active');
-}
-
-function closePrizeWheel() {
-    document.getElementById('prizeWheelModal').classList.remove('active');
-}
-
-function spinWheel() {
-    if (wheelSpinning) return;
-    
-    const wheel = document.getElementById('prizeWheel');
-    const resultDiv = document.getElementById('wheelResult');
-    const messageDiv = document.querySelector('.prize-message');
-    const spinBtn = document.getElementById('spinWheelBtn');
-    
-    wheelSpinning = true;
-    spinBtn.disabled = true;
-    
-    // Выбираем случайный приз
-    const randomIndex = Math.floor(Math.random() * prizes.length);
-    // Каждый сектор занимает 90°. Чтобы указатель (сверху) указывал на середину сектора,
-    // нужно повернуть колесо на угол: -(randomIndex * 90 + 45) + 360 * 5 (5 полных оборотов)
-    const targetAngle = -(randomIndex * 90 + 45) + 360 * 5;
-    
-    wheel.style.transform = `rotate(${targetAngle}deg)`;
-    
-    setTimeout(() => {
-        resultDiv.textContent = `🎉 Ты выиграл: ${prizes[randomIndex]}!`;
-        resultDiv.style.display = 'block';
-        messageDiv.style.display = 'block';
-        spinBtn.style.display = 'none';
-        wheelSpinning = false;
-        createConfetti(); // добавим конфетти для радости
-    }, 3000); // длительность анимации должна совпадать с transition в CSS
-}
 });
