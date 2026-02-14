@@ -51,7 +51,7 @@
         <section class="game-section">
             <div class="game-promo">
                 <h2>🎮 Сыграй в игру!</h2>
-                <p>Помоги герою преодолеть туалетные препятствия и получи сертификат поддержки!</p>
+                <p>Помоги герою преодолеть туалетные препятствия и получи приз!</p>
                 <button class="game-button" onclick="openGame()">
                     <span class="game-icon">🚀</span>
                     НАЧАТЬ ИГРУ
@@ -109,7 +109,7 @@
             <div class="easter-egg" onclick="showEasterEgg(1)">🔍</div>
         </section>
 
-        <!-- ФУТЕР (с названием группы) -->
+        <!-- ФУТЕР -->
         <footer class="footer">
             <p>Сделано студентами для студентов 💪</p>
             <p class="footer-slogan">"Каждый этаж заслуживает туалет!"</p>
@@ -117,7 +117,7 @@
         </footer>
     </div>
 
-    <!-- МОДАЛЬНЫЕ ОКНА -->
+    <!-- МОДАЛЬНОЕ ОКНО ИГРЫ -->
     <div id="gameModal" class="modal">
         <div class="modal-content game-container">
             <button class="close-modal" onclick="closeGame()">✕</button>
@@ -137,36 +137,22 @@
         </div>
     </div>
 
-    <div id="certificateModal" class="modal">
-        <div class="modal-content certificate-container">
-            <button class="close-modal" onclick="closeCertificate()">✕</button>
-            <h2>🏆 Поздравляем! Ты получил сертификат!</h2>
-            <div class="certificate-form">
-                <div class="form-group">
-                    <label>Твоё имя:</label>
-                    <input type="text" id="certificateName" placeholder="Введи своё имя">
-                </div>
-                <div class="form-group">
-                    <label>Твоё фото (опционально):</label>
-                    <input type="file" id="certificatePhoto" accept="image/*">
-                </div>
-                <button class="generate-button" onclick="generateCertificate()">Создать сертификат</button>
+    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ РУЛЕТКИ (ВМЕСТО СЕРТИФИКАТА) -->
+    <div id="prizeModal" class="modal">
+        <div class="modal-content prize-container">
+            <button class="close-modal" onclick="closePrize()">✕</button>
+            <h2>🎁 Твой приз!</h2>
+            <div id="prizeResult" class="prize-result">
+                <!-- Сюда будет вставлен результат рулетки -->
             </div>
-            <div id="certificatePreview" class="certificate-preview" style="display:none;">
-                <canvas id="certificateCanvas"></canvas>
-                <div class="certificate-actions">
-                    <button class="action-button" onclick="downloadCertificate()">📥 Скачать</button>
-                    <button class="action-button" onclick="shareCertificate()">📤 Поделиться</button>
-                </div>
-                <div class="certificate-message">
-                    <p><strong>🔥 Теперь твоя миссия:</strong></p>
-                    <p>Распечатай и развесь объявления о возвращении туалета на 4 этаж!</p>
-                    <p>Покажи этот сертификат друзьям и призови их поддержать кампанию!</p>
-                </div>
+            <div class="prize-message">
+                <p>Приходи на <strong>3 этаж в туалет</strong> и покажи этот результат!</p>
+                <button class="action-button" onclick="closePrize()">ОК</button>
             </div>
         </div>
     </div>
 
+    <!-- ПАСХАЛКА (оставляем) -->
     <div id="easterEggModal" class="modal">
         <div class="modal-content easter-egg-content">
             <button class="close-modal" onclick="closeEasterEgg()">✕</button>
