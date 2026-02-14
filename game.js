@@ -326,38 +326,10 @@ class ToiletRunnerGame {
         restartButton.style.display = 'inline-block';
     }
     
-    // НОВЫЙ МЕТОД ВМЕСТО unlockCertificate
-    unlockPrize() {
-        this.stop(); // останавливаем игру
-        const prizes = ['Карандаш', 'Ручка', 'Ластик', 'Тетрадь'];
-        const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
-        // Небольшая задержка, чтобы закрыть игру и показать приз
-        setTimeout(() => {
-            closeGame(); // закрываем модальное окно игры
-            openPrize(randomPrize); // показываем рулетку с призом
-        }, 500);
-    }
-    
-    gameLoop() {
-        if (!this.isRunning) return;
-        this.update();
-        this.draw();
-        requestAnimationFrame(() => this.gameLoop());
-    }
-}
-
-function initGame() {
-    if (!gameInstance) {
-        gameInstance = new ToiletRunnerGame('gameCanvas');
-        window.gameInstance = gameInstance;
-    }
-    startButton.onclick = () => {
-        gameInstance.start();
-        startButton.style.display = 'none';
-        restartButton.style.display = 'none';
-    };
-    restartButton.onclick = () => {
-        gameInstance.reset();
-        restartButton.style.display = 'none';
-    };
+unlockPrize() {
+    this.stop(); // останавливаем игру
+    setTimeout(() => {
+        closeGame(); // закрываем модальное окно игры
+        openPrizeWheel(); // открываем рулетку
+    }, 500);
 }
