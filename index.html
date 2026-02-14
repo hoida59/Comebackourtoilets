@@ -2,20 +2,16 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Верните туалет на 4 этаж! | Кампания протеста</title>
-    <!-- favicon в виде эмодзи -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='90' font-size='90'>🚽</text></svg>">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Фоновые элементы -->
     <div class="background-pattern"></div>
     
-    <!-- Основной контейнер -->
     <div class="container">
-        
-        <!-- ШАПКА: Верните туалет на 4 этаж! -->
+        <!-- ШАПКА -->
         <header class="header">
             <div class="toilet-icon">🚽</div>
             <h1 class="main-title">ВЕРНИТЕ ТУАЛЕТ НА 4 ЭТАЖ!</h1>
@@ -23,7 +19,7 @@
             <div class="protest-badge">✊ ПРОТЕСТ АКТИВЕН</div>
         </header>
 
-        <!-- СЧЁТЧИК ПОДПИСЕЙ: Нас уже человек поддерживает -->
+        <!-- СЧЁТЧИК ПОДПИСЕЙ -->
         <section class="counter-section">
             <div class="counter-card">
                 <h3>Нас уже:</h3>
@@ -32,7 +28,7 @@
             </div>
         </section>
 
-        <!-- ФОРМА ПОДПИСИ: Поддержи кампанию! -->
+        <!-- ФОРМА ПОДПИСИ -->
         <section class="signature-section">
             <h2>Поддержи кампанию!</h2>
             <div class="signature-form">
@@ -51,7 +47,7 @@
             </div>
         </section>
 
-        <!-- БЛОК ИГРЫ: Сыграй в игру! -->
+        <!-- БЛОК ИГРЫ -->
         <section class="game-section">
             <div class="game-promo">
                 <h2>🎮 Сыграй в игру!</h2>
@@ -66,36 +62,36 @@
             </div>
         </section>
 
-<!-- QR-КОДЫ: Распространяй информацию! -->
-<section class="qr-section">
-    <h2>Распространяй информацию!</h2>
-    <p class="qr-description">Зайди в туалет на 3 на перемене и получи свой QR-код.</p>
-    <div class="qr-grid">
-        <div class="qr-card">
-            <div class="qr-placeholder" id="qr1">
-                <canvas id="qrCanvas1"></canvas>
+        <!-- QR-КОДЫ -->
+        <section class="qr-section">
+            <h2>Распространяй информацию!</h2>
+            <p class="qr-description">Зайди в туалет на 3 на перемене и получи свой QR-код.</p>
+            <div class="qr-grid">
+                <div class="qr-card">
+                    <div class="qr-placeholder" id="qr1">
+                        <canvas id="qrCanvas1"></canvas>
+                    </div>
+                    <p>Главная страница</p>
+                    <button class="download-qr" onclick="downloadQR('qr1')">Скачать</button>
+                </div>
+                <div class="qr-card">
+                    <div class="qr-placeholder" id="qr2">
+                        <canvas id="qrCanvas2"></canvas>
+                    </div>
+                    <p>ТГ-КАНАЛ</p>
+                    <button class="download-qr" onclick="downloadQR('qr2')">Скачать</button>
+                </div>
+                <div class="qr-card">
+                    <div class="qr-placeholder" id="qr3">
+                        <canvas id="qrCanvas3"></canvas>
+                    </div>
+                    <p>Бонус</p>
+                    <button class="download-qr" onclick="downloadQR('qr3')">Скачать</button>
+                </div>
             </div>
-            <p>Главная страница</p> <!-- Оставляем без изменений -->
-            <button class="download-qr" onclick="downloadQR('qr1')">Скачать</button>
-        </div>
-        <div class="qr-card">
-            <div class="qr-placeholder" id="qr2">
-                <canvas id="qrCanvas2"></canvas>
-            </div>
-            <p>ТГ-КАНАЛ</p> <!-- Было "Игра", меняем на "ТГ-КАНАЛ" -->
-            <button class="download-qr" onclick="downloadQR('qr2')">Скачать</button>
-        </div>
-        <div class="qr-card">
-            <div class="qr-placeholder" id="qr3">
-                <canvas id="qrCanvas3"></canvas>
-            </div>
-            <p>Бонус</p> <!-- Было "Петиция", меняем на "Бонус" -->
-            <button class="download-qr" onclick="downloadQR('qr3')">Скачать</button>
-        </div>
-    </div>
-</section>
+        </section>
 
-        <!-- МОТИВАЦИЯ: Почему это важно? -->
+        <!-- МОТИВАЦИЯ -->
         <section class="motivation-section">
             <div class="motivation-card">
                 <h2>Почему это важно?</h2>
@@ -108,20 +104,20 @@
             </div>
         </section>
 
-        <!-- Пасхалка -->
+        <!-- ПАСХАЛКА -->
         <section class="easter-eggs">
             <div class="easter-egg" onclick="showEasterEgg(1)">🔍</div>
         </section>
 
-        <!-- Футер -->
+        <!-- ФУТЕР (с названием группы) -->
         <footer class="footer">
             <p>Сделано студентами для студентов 💪</p>
             <p class="footer-slogan">"Каждый этаж заслуживает туалет!"</p>
+            <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.7;">Основатели: fsociety</p>
         </footer>
-
     </div>
 
-    <!-- Модальное окно игры -->
+    <!-- МОДАЛЬНЫЕ ОКНА -->
     <div id="gameModal" class="modal">
         <div class="modal-content game-container">
             <button class="close-modal" onclick="closeGame()">✕</button>
@@ -132,21 +128,19 @@
                     <div class="stat">Рекорд: <span id="gameHighScore">0</span></div>
                 </div>
             </div>
-            <canvas id="gameCanvas"></canvas>
+            <canvas id="gameCanvas" tabindex="0"></canvas>
             <div class="game-controls">
                 <button id="startButton" class="control-button">СТАРТ</button>
                 <button id="restartButton" class="control-button" style="display:none;">ЗАНОВО</button>
             </div>
-            <p class="game-instruction">Нажми ПРОБЕЛ или кликни для прыжка</p>
+            <p class="game-instruction">Нажми ПРОБЕЛ или коснись экрана для прыжка</p>
         </div>
     </div>
 
-    <!-- Модальное окно сертификата -->
     <div id="certificateModal" class="modal">
         <div class="modal-content certificate-container">
             <button class="close-modal" onclick="closeCertificate()">✕</button>
             <h2>🏆 Поздравляем! Ты получил сертификат!</h2>
-            
             <div class="certificate-form">
                 <div class="form-group">
                     <label>Твоё имя:</label>
@@ -156,20 +150,13 @@
                     <label>Твоё фото (опционально):</label>
                     <input type="file" id="certificatePhoto" accept="image/*">
                 </div>
-                <button class="generate-button" onclick="generateCertificate()">
-                    Создать сертификат
-                </button>
+                <button class="generate-button" onclick="generateCertificate()">Создать сертификат</button>
             </div>
-
             <div id="certificatePreview" class="certificate-preview" style="display:none;">
                 <canvas id="certificateCanvas"></canvas>
                 <div class="certificate-actions">
-                    <button class="action-button" onclick="downloadCertificate()">
-                        📥 Скачать
-                    </button>
-                    <button class="action-button" onclick="shareCertificate()">
-                        📤 Поделиться
-                    </button>
+                    <button class="action-button" onclick="downloadCertificate()">📥 Скачать</button>
+                    <button class="action-button" onclick="shareCertificate()">📤 Поделиться</button>
                 </div>
                 <div class="certificate-message">
                     <p><strong>🔥 Теперь твоя миссия:</strong></p>
@@ -180,7 +167,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно пасхалки -->
     <div id="easterEggModal" class="modal">
         <div class="modal-content easter-egg-content">
             <button class="close-modal" onclick="closeEasterEgg()">✕</button>
