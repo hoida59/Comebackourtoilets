@@ -1,4 +1,4 @@
-// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (ДЛЯ ТЕЛЕФОНОВ, БЕЗ ПРИСЕДАНИЙ) =====
+// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (ФИНАЛ) =====
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -7,7 +7,6 @@ const gameHighScoreEl = document.getElementById('gameHighScore');
 const startButton = document.getElementById('startButton');
 const restartButton = document.getElementById('restartButton');
 
-// Для получения фокуса клавиатурой (на случай подключенной клавиатуры)
 canvas.setAttribute('tabindex', '0');
 
 let gameInstance = null;
@@ -16,62 +15,47 @@ class ToiletRunnerGame {
     constructor(canvasId) {
         this.canvas = document.getElementById(canvasId);
         this.ctx = this.canvas.getContext('2d');
-        
-        // Размеры canvas
         this.canvas.width = 800;
         this.canvas.height = 400;
         
-        // Игровые переменные
         this.score = 0;
         this.isRunning = false;
         this.gameOver = false;
         this.frameCount = 0;
         this.certificateUnlocked = false;
         
-        // Физика как в классическом динозавре
         this.gravity = 0.2;
         this.jumpPower = -8;
         
-        // Игрок (без приседаний!)
         this.player = {
-            x: 100,
-            y: 0,
-            width: 60,
-            height: 60,
-            velocityY: 0,
-            onGround: true
+            x: 100, y: 0, width: 60, height: 60,
+            velocityY: 0, onGround: true
         };
-        
-        // Земля
         this.groundY = this.canvas.height - 80;
         this.player.y = this.groundY - this.player.height;
         
-        // Препятствия
         this.obstacles = [];
         this.obstacleFrequency = 120;
         this.minObstacleFrequency = 60;
         
         // Видео
         this.video = document.createElement('video');
-        this.video.src = 'video.mp4'; // имя твоего видеофайла
+        this.video.src = 'video.mp4'; // замените на имя вашего видео
         this.video.loop = true;
         this.video.muted = true;
         this.video.playsInline = true;
         this.video.preload = 'auto';
         this.video.crossOrigin = 'anonymous';
-        
         this.videoLoaded = false;
         
         this.video.addEventListener('loadeddata', () => {
             this.videoLoaded = true;
             console.log('✅ Видео загружено');
         });
-        
         this.video.addEventListener('error', () => {
-            console.log('❌ Ошибка загрузки видео');
+            console.log('❌ Ошибка загрузки видео. Проверьте файл video.mp4');
             this.videoLoaded = false;
         });
-        
         this.video.load();
         
         // Звуки (если есть файлы)
@@ -106,9 +90,7 @@ class ToiletRunnerGame {
         this.setupControls();
     }
     
-    // Управление: клавиши + касания
     setupControls() {
-        // Клавиатура (пробел/стрелка вверх)
         this.canvas.addEventListener('keydown', (e) => {
             if (!this.isRunning || this.gameOver) return;
             if (e.code === 'Space' || e.code === 'ArrowUp') {
@@ -117,32 +99,26 @@ class ToiletRunnerGame {
             }
         });
         
-        // Клик мышью (для компьютера)
-        this.canvas.addEventListener('click', (e) => {
-            if (!this.isRunning || this.gameOver) return;
-            this.jump();
+        this.canvas.addEventListener('click', () => {
+            if (this.isRunning && !this.gameOver) this.jump();
         });
         
-        // Касание для телефонов (одно касание — прыжок)
         this.canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // предотвращаем скролл страницы
-            if (!this.isRunning || this.gameOver) return;
-            this.jump();
+            e.preventDefault();
+            if (this.isRunning && !this.gameOver) this.jump();
         });
     }
     
-    // Прыжок
     jump() {
         if (this.player.onGround) {
             this.player.velocityY = this.jumpPower;
             this.player.onGround = false;
             this.jumpSound.currentTime = 0;
-            this.jumpSound.play().catch(() => {}); // игнорируем ошибки автовоспроизведения
+            this.jumpSound.play().catch(() => {});
             console.log('🚀 Прыжок');
         }
     }
     
-    // Запуск игры
     start() {
         this.score = 0;
         this.isRunning = true;
@@ -158,7 +134,6 @@ class ToiletRunnerGame {
             this.video.currentTime = 0;
             this.video.play().catch(() => {});
         }
-        
         this.bgMusic.currentTime = 0;
         this.bgMusic.play().catch(() => {});
         
@@ -167,7 +142,7 @@ class ToiletRunnerGame {
     
     stop() {
         this.isRunning = false;
-        if (this.video) this.video.pause();
+        this.video?.pause();
         this.bgMusic.pause();
     }
     
@@ -183,16 +158,16 @@ class ToiletRunnerGame {
         this.score = Math.floor(this.frameCount / 10);
         gameScoreEl.textContent = this.score;
         
-        if (this.score >= 500 && !this.certificateUnlocked) {
+        // сертификат за 300 очков
+        if (this.score >= 300 && !this.certificateUnlocked) {
             this.certificateUnlocked = true;
             this.unlockCertificate();
         }
         
-        // Физика прыжка
+        // физика
         this.player.velocityY += this.gravity;
         this.player.y += this.player.velocityY;
         
-        // Проверка земли
         if (this.player.y >= this.groundY - this.player.height) {
             this.player.y = this.groundY - this.player.height;
             this.player.velocityY = 0;
@@ -201,7 +176,7 @@ class ToiletRunnerGame {
             this.player.onGround = false;
         }
         
-        // Препятствия
+        // препятствия
         const freq = Math.max(this.minObstacleFrequency, this.obstacleFrequency - Math.floor(this.score / 100) * 10);
         if (this.frameCount % freq === 0) this.createObstacle();
         
@@ -220,7 +195,7 @@ class ToiletRunnerGame {
             }
         }
         
-        // Облака
+        // облака
         for (let cloud of this.clouds) {
             cloud.x -= cloud.speed;
             if (cloud.x + cloud.width < 0) {
@@ -241,24 +216,24 @@ class ToiletRunnerGame {
         });
     }
     
-    checkCollision(rect1, rect2) {
-        return rect1.x < rect2.x + rect2.width &&
-               rect1.x + rect1.width > rect2.x &&
-               rect1.y < rect2.y + rect2.height &&
-               rect1.y + rect1.height > rect2.y;
+    checkCollision(r1, r2) {
+        return r1.x < r2.x + r2.width &&
+               r1.x + r1.width > r2.x &&
+               r1.y < r2.y + r2.height &&
+               r1.y + r1.height > r2.y;
     }
     
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Тёмный фон
-        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-        gradient.addColorStop(0, '#1a1a2e');
-        gradient.addColorStop(1, '#16213e');
-        this.ctx.fillStyle = gradient;
+        // тёмный фон
+        const grad = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+        grad.addColorStop(0, '#1a1a2e');
+        grad.addColorStop(1, '#16213e');
+        this.ctx.fillStyle = grad;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // Облака
+        // облака
         this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
         for (let cloud of this.clouds) {
             this.ctx.beginPath();
@@ -268,13 +243,13 @@ class ToiletRunnerGame {
             this.ctx.fill();
         }
         
-        // Земля
+        // земля
         this.ctx.fillStyle = '#2d5a27';
         this.ctx.fillRect(0, this.groundY, this.canvas.width, this.canvas.height - this.groundY);
         this.ctx.fillStyle = '#1e3a1e';
         this.ctx.fillRect(0, this.groundY, this.canvas.width, 10);
         
-        // Препятствия
+        // препятствия
         for (let obs of this.obstacles) {
             this.ctx.fillStyle = 'rgba(150,150,150,0.5)';
             this.ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
@@ -286,18 +261,18 @@ class ToiletRunnerGame {
             this.ctx.fillText(obs.emoji, obs.x + obs.width/2, obs.y + obs.height/2);
         }
         
-        // Игрок (видео)
+        // игрок
         if (this.videoLoaded && this.video.readyState >= 2) {
             try {
                 this.ctx.drawImage(this.video, this.player.x, this.player.y, this.player.width, this.player.height);
-            } catch (e) {
+            } catch {
                 this.drawPlaceholder();
             }
         } else {
             this.drawPlaceholder();
         }
         
-        // Отладка (можно убрать после проверки)
+        // отладка (можно убрать)
         this.ctx.fillStyle = '#fff';
         this.ctx.font = '14px Arial';
         this.ctx.fillText(`onGround: ${this.player.onGround}`, 10, 20);
@@ -312,7 +287,6 @@ class ToiletRunnerGame {
             this.ctx.fillText('GAME OVER', this.canvas.width/2, this.canvas.height/2 - 50);
             this.ctx.font = '30px Arial';
             this.ctx.fillText(`Счёт: ${this.score}`, this.canvas.width/2, this.canvas.height/2 + 20);
-            
             const high = parseInt(localStorage.getItem('toiletGameHighScore')) || 0;
             if (this.score > high) {
                 this.ctx.fillStyle = '#f4a261';
@@ -341,8 +315,8 @@ class ToiletRunnerGame {
         this.bgMusic.pause();
         this.bgMusic.currentTime = 0;
         
-        const highScore = parseInt(localStorage.getItem('toiletGameHighScore')) || 0;
-        if (this.score > highScore) {
+        const high = parseInt(localStorage.getItem('toiletGameHighScore')) || 0;
+        if (this.score > high) {
             localStorage.setItem('toiletGameHighScore', this.score);
             gameHighScoreEl.textContent = this.score;
             document.getElementById('highScore').textContent = this.score;
@@ -355,7 +329,7 @@ class ToiletRunnerGame {
     unlockCertificate() {
         this.stop();
         setTimeout(() => {
-            alert('🎉 500 очков! Сертификат разблокирован!');
+            alert('🎉 300 очков! Сертификат разблокирован!');
             closeGame();
             openCertificate();
         }, 500);
@@ -374,13 +348,11 @@ function initGame() {
         gameInstance = new ToiletRunnerGame('gameCanvas');
         window.gameInstance = gameInstance;
     }
-    
     startButton.onclick = () => {
         gameInstance.start();
         startButton.style.display = 'none';
         restartButton.style.display = 'none';
     };
-    
     restartButton.onclick = () => {
         gameInstance.reset();
         restartButton.style.display = 'none';
