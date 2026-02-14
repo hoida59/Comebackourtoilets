@@ -1,4 +1,4 @@
-// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (ФИНАЛ) =====
+// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (С РУЛЕТКОЙ) =====
 
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
@@ -22,7 +22,7 @@ class ToiletRunnerGame {
         this.isRunning = false;
         this.gameOver = false;
         this.frameCount = 0;
-        this.certificateUnlocked = false;
+        this.prizeUnlocked = false; // флаг, что приз уже получен
         
         this.gravity = 0.2;
         this.jumpPower = -8;
@@ -58,7 +58,7 @@ class ToiletRunnerGame {
         });
         this.video.load();
         
-        // Звуки (если есть файлы)
+        // Звуки
         this.jumpSound = new Audio('jump.mp3');
         this.jumpSound.volume = 0.3;
         this.crashSound = new Audio('crash.mp3');
@@ -128,7 +128,7 @@ class ToiletRunnerGame {
         this.player.y = this.groundY - this.player.height;
         this.player.velocityY = 0;
         this.player.onGround = true;
-        this.certificateUnlocked = false;
+        this.prizeUnlocked = false; // сбрасываем флаг при новой игре
         
         if (this.videoLoaded) {
             this.video.currentTime = 0;
@@ -158,10 +158,10 @@ class ToiletRunnerGame {
         this.score = Math.floor(this.frameCount / 10);
         gameScoreEl.textContent = this.score;
         
-        // сертификат за 300 очков
-        if (this.score >= 300 && !this.certificateUnlocked) {
-            this.certificateUnlocked = true;
-            this.unlockCertificate();
+        // Приз за 300 очков (только один раз)
+        if (this.score >= 300 && !this.prizeUnlocked) {
+            this.prizeUnlocked = true;
+            this.unlockPrize();
         }
         
         // физика
@@ -326,12 +326,15 @@ class ToiletRunnerGame {
         restartButton.style.display = 'inline-block';
     }
     
-    unlockCertificate() {
-        this.stop();
+    // НОВЫЙ МЕТОД ВМЕСТО unlockCertificate
+    unlockPrize() {
+        this.stop(); // останавливаем игру
+        const prizes = ['Карандаш', 'Ручка', 'Ластик', 'Тетрадь'];
+        const randomPrize = prizes[Math.floor(Math.random() * prizes.length)];
+        // Небольшая задержка, чтобы закрыть игру и показать приз
         setTimeout(() => {
-            alert('🎉 300 очков! Сертификат разблокирован!');
-            closeGame();
-            openCertificate();
+            closeGame(); // закрываем модальное окно игры
+            openPrize(randomPrize); // показываем рулетку с призом
         }, 500);
     }
     
