@@ -137,17 +137,25 @@
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО ДЛЯ ПРИЗА -->
-    <div id="prizeModal" class="modal">
-        <div class="modal-content prize-container">
-            <button class="close-modal" onclick="closePrize()">✕</button>
-            <h2>🎁 Твой приз!</h2>
-            <div id="prizeResult" class="prize-result" style="text-align: center; font-size: 2rem; margin: 20px 0;">
-                <!-- Сюда вставится результат -->
+    <!-- МОДАЛЬНОЕ ОКНО КОЛЕСА (РУЛЕТКА) -->
+    <div id="wheelModal" class="modal">
+        <div class="modal-content wheel-container">
+            <button class="close-modal" onclick="closeWheel()">✕</button>
+            <h2>🎁 Крути колесо!</h2>
+            <div class="wheel-wrapper">
+                <div class="wheel" id="wheel">
+                    <div class="wheel-segment" style="--i:0;">Карандаш</div>
+                    <div class="wheel-segment" style="--i:1;">Ручка</div>
+                    <div class="wheel-segment" style="--i:2;">Ластик</div>
+                    <div class="wheel-segment" style="--i:3;">Тетрадь</div>
+                </div>
+                <div class="wheel-pointer">▼</div>
             </div>
-            <div class="prize-message" style="text-align: center;">
+            <button id="spinButton" class="action-button" onclick="spinWheel()">Крутить!</button>
+            <div id="wheelResult" class="wheel-result" style="display: none;"></div>
+            <div class="prize-message" style="display: none;">
                 <p>Приходи на <strong>3 этаж в туалет</strong> и покажи этот результат!</p>
-                <button class="action-button" onclick="closePrize()" style="margin-top: 20px;">ОК</button>
+                <button class="action-button" onclick="closeWheel()">ОК</button>
             </div>
         </div>
     </div>
