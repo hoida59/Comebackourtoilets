@@ -92,8 +92,8 @@ function createConfetti() {
 }
 
 // ===== QR КОДЫ =====
-// ⬇️⬇️⬇️ СЮДА ВСТАВЛЯЙ СВОИ ССЫЛКИ НА КАРТИНКИ QR ⬇️⬇️⬇️
 function generateQRCodes() {
+    // ⬇️⬇️⬇️ СЮДА ВСТАВЛЯЙ СВОИ ССЫЛКИ НА КАРТИНКИ QR ⬇️⬇️⬇️
     const myImages = [
         'https://i.postimg.cc/your-code-1/your-image-1.jpg', // Главная страница
         'https://i.postimg.cc/your-code-2/your-image-2.jpg', // ТГ-КАНАЛ
@@ -113,7 +113,6 @@ function generateQRCodes() {
             console.log(`QR${i+1} загружен`);
         };
         img.onerror = () => {
-            // заглушка
             ctx.fillStyle = '#667eea';
             ctx.fillRect(0, 0, 200, 200);
             ctx.fillStyle = '#fff';
@@ -163,23 +162,63 @@ function saveHighScore(score) {
     }
 }
 
-// ===== ПРИЗ (ПРОСТАЯ РУЛЕТКА) =====
+// ===== КОЛЕСО (АНИМИРОВАННОЕ) =====
 const prizes = ['Карандаш', 'Ручка', 'Ластик', 'Тетрадь'];
+let spinning = false;
 
-function openPrize(prize) {
-    const modal = document.getElementById('prizeModal');
-    const resultDiv = document.getElementById('prizeResult');
-    resultDiv.innerHTML = `
-        <div style="font-size: 4rem; margin: 20px;">🎲</div>
-        <div style="font-size: 2rem; font-weight: bold; color: #e94560;">${prize}</div>
-        <p style="margin-top: 20px;">Ты выиграл(а) этот приз!</p>
-    `;
+function openWheel() {
+    const modal = document.getElementById('wheelModal');
+    const wheel = document.getElementById('wheel');
+    const spinBtn = document.getElementById('spinButton');
+    const resultDiv = document.getElementById('wheelResult');
+    const messageDiv = document.querySelector('.prize-message');
+    
+    // Сбрасываем состояние
+    wheel.style.transform = 'rotate(0deg)';
+    resultDiv.style.display = 'none';
+    messageDiv.style.display = 'none';
+    spinBtn.style.display = 'inline-block';
+    spinBtn.disabled = false;
+    spinning = false;
+    
     modal.classList.add('active');
-    createConfetti(); // праздничное настроение
 }
 
-function closePrize() {
-    document.getElementById('prizeModal').classList.remove('active');
+function closeWheel() {
+    document.getElementById('wheelModal').classList.remove('active');
+}
+
+function spinWheel() {
+    if (spinning) return;
+    
+    const wheel = document.getElementById('wheel');
+    const resultDiv = document.getElementById('wheelResult');
+    const messageDiv = document.querySelector('.prize-message');
+    const spinBtn = document.getElementById('spinButton');
+    
+    spinning = true;
+    spinBtn.disabled = true;
+    
+    // Случайный индекс приза (0-3)
+    const randomIndex = Math.floor(Math.random() * prizes.length);
+    // Каждый сектор занимает 90°, указатель сверху. Чтобы указатель указывал на середину сектора,
+    // нужно повернуть колесо на угол: -(randomIndex * 90 + 45) + 360 * 5 (5 полных оборотов)
+    const targetAngle = -(randomIndex * 90 + 45) + 360 * 5;
+    
+    wheel.style.transform = `rotate(${targetAngle}deg)`;
+    
+    setTimeout(() => {
+        resultDiv.innerHTML = `
+            <div style="font-size: 4rem;">🎲</div>
+            <div style="font-size: 2rem; font-weight: bold; color: #e94560;">${prizes[randomIndex]}</div>
+            <p style="margin-top: 20px;">Ты выиграл(а) этот приз!</p>
+        `;
+        resultDiv.style.display = 'block';
+        messageDiv.style.display = 'block';
+        spinBtn.style.display = 'none';
+        spinning = false;
+        createConfetti();
+    }, 3000); // время совпадает с transition в CSS
 }
 
 // ===== ПАСХАЛКИ =====
