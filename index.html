@@ -162,5 +162,27 @@
 
     <script src="script.js"></script>
     <script src="game.js"></script>
+    <!-- Модальное окно рулетки -->
+<div id="prizeWheelModal" class="modal">
+    <div class="modal-content prize-wheel-container">
+        <button class="close-modal" onclick="closePrizeWheel()">✕</button>
+        <h2>🎁 Крути колесо!</h2>
+        <div class="wheel-wrapper">
+            <div class="wheel" id="prizeWheel">
+                <div class="wheel-segment" style="--i:0;">Карандаш</div>
+                <div class="wheel-segment" style="--i:1;">Ручка</div>
+                <div class="wheel-segment" style="--i:2;">Ластик</div>
+                <div class="wheel-segment" style="--i:3;">Тетрадь</div>
+            </div>
+            <div class="wheel-pointer">▼</div>
+        </div>
+        <button id="spinWheelBtn" class="action-button" onclick="spinWheel()">Крутить!</button>
+        <div id="wheelResult" class="wheel-result" style="display: none;"></div>
+        <div class="prize-message" style="display: none;">
+            <p>Приходи на <strong>3 этаж в туалет</strong> и покажи этот результат!</p>
+            <button class="action-button" onclick="closePrizeWheel()">ОК</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
