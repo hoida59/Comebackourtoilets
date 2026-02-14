@@ -1,4 +1,4 @@
-// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (УЛУЧШЕННЫЙ ПРЫЖОК) =====
+// ===== ИГРА: ТУАЛЕТНЫЙ ЗАБЕГ (ПРЫЖКИ + ЗВУК) =====
 
 // Элементы DOM
 const canvas = document.getElementById('gameCanvas');
@@ -8,7 +8,7 @@ const gameHighScoreEl = document.getElementById('gameHighScore');
 const startButton = document.getElementById('startButton');
 const restartButton = document.getElementById('restartButton');
 
-// Убедись, что canvas может получать фокус
+// Убедимся, что canvas может получать фокус
 canvas.setAttribute('tabindex', '0');
 
 let gameInstance = null;
@@ -29,9 +29,9 @@ class ToiletRunnerGame {
         this.frameCount = 0;
         this.certificateUnlocked = false;
         
-        // ФИЗИКА: уменьшил гравитацию, увеличил силу прыжка
-        this.gravity = 0.4;         // было 0.6
-        this.jumpPower = -15;        // было -12
+        // ФИЗИКА: усиливаем прыжок и уменьшаем гравитацию
+        this.gravity = 0.3;          // было 0.4
+        this.jumpPower = -18;         // было -15
         
         // Игрок
         this.player = {
@@ -53,9 +53,9 @@ class ToiletRunnerGame {
         this.obstacleFrequency = 120;
         this.minObstacleFrequency = 60;
         
-        // Видео (локальный файл)
+        // ========== ВИДЕО ==========
         this.video = document.createElement('video');
-        this.video.src = 'video.mp4'; // поправь имя при необходимости
+        this.video.src = 'video.mp4'; // Убедись, что файл есть в корне
         this.video.loop = true;
         this.video.muted = true;
         this.video.playsInline = true;
@@ -69,14 +69,21 @@ class ToiletRunnerGame {
             console.log('✅ Видео загружено');
         });
         
-        this.video.addEventListener('error', (e) => {
-            console.log('❌ Ошибка загрузки видео. Проверь файл.');
+        this.video.addEventListener('error', () => {
+            console.log('❌ Ошибка загрузки видео');
             this.videoLoaded = false;
         });
         
         this.video.load();
         
-        // Типы препятствий
+        // ========== ЗВУКИ ==========
+        this.jumpSound = new Audio('sounds/jump.mp3'); // Создай папку sounds и положи файл
+        this.jumpSound.volume = 0.3;
+        
+        this.crashSound = new Audio('sounds/crash.mp3');
+        this.crashSound.volume = 0.5;
+        
+        // ========== ПРЕПЯТСТВИЯ ==========
         this.obstacleTypes = [
             { emoji: '🚽', width: 40, height: 60 },
             { emoji: '🚻', width: 50, height: 70 },
@@ -99,8 +106,9 @@ class ToiletRunnerGame {
         this.setupControls();
     }
     
+    // ================== УПРАВЛЕНИЕ ==================
     setupControls() {
-        // Клавиши – используем canvas как цель событий
+        // Клавиатура
         this.canvas.addEventListener('keydown', (e) => {
             if (!this.isRunning || this.gameOver) return;
             
@@ -120,7 +128,7 @@ class ToiletRunnerGame {
             }
         });
         
-        // Клик по canvas (правая половина – прыжок)
+        // Клик / тач
         this.canvas.addEventListener('click', (e) => {
             if (!this.isRunning || this.gameOver) return;
             const rect = this.canvas.getBoundingClientRect();
@@ -133,7 +141,6 @@ class ToiletRunnerGame {
             }
         });
         
-        // Тач-события
         this.canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             if (!this.isRunning || this.gameOver) return;
@@ -149,25 +156,28 @@ class ToiletRunnerGame {
         });
     }
     
+    // ================== ПРЫЖОК ==================
     jump() {
-        console.log('jump() вызван, onGround =', this.player.onGround);
         if (this.player.onGround) {
             this.player.velocityY = this.jumpPower;
             this.player.onGround = false;
             this.player.ducking = false;
-            console.log('🚀 Прыжок выполнен!');
-        } else {
-            console.log('⛔ Прыжок невозможен: не на земле');
+            
+            // Воспроизводим звук прыжка
+            this.jumpSound.currentTime = 0;
+            this.jumpSound.play().catch(e => console.log('Звук не воспроизведён:', e));
+            
+            console.log('🚀 Прыжок! velocityY =', this.player.velocityY);
         }
     }
     
     duck(start) {
         if (this.isRunning && !this.gameOver) {
             this.player.ducking = start;
-            console.log(start ? 'Пригнулся' : 'Встал');
         }
     }
     
+    // ================== ИГРОВОЙ ЦИКЛ ==================
     start() {
         this.score = 0;
         this.isRunning = true;
@@ -214,6 +224,7 @@ class ToiletRunnerGame {
         this.player.velocityY += this.gravity;
         this.player.y += this.player.velocityY;
         
+        // Проверка земли
         if (this.player.y >= this.groundY - this.player.height) {
             this.player.y = this.groundY - this.player.height;
             this.player.velocityY = 0;
@@ -243,7 +254,10 @@ class ToiletRunnerGame {
                 this.obstacles.splice(i, 1);
                 continue;
             }
-            if (this.checkCollision(this.player, obs)) this.endGame();
+            if (this.checkCollision(this.player, obs)) {
+                this.crashSound.play().catch(e => {});
+                this.endGame();
+            }
         }
         
         // Облака
@@ -274,6 +288,7 @@ class ToiletRunnerGame {
                rect1.y + rect1.height > rect2.y;
     }
     
+    // ================== ОТРИСОВКА ==================
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
@@ -354,6 +369,7 @@ class ToiletRunnerGame {
         this.ctx.fillText('нет видео', this.player.x + 10, this.player.y - 5);
     }
     
+    // ================== КОНЕЦ ИГРЫ ==================
     endGame() {
         this.gameOver = true;
         this.isRunning = false;
