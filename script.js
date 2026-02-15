@@ -1,57 +1,100 @@
+// ===== JSONBIN.IO НАСТРОЙКИ =====
+const BIN_ID = '6992023743b1c97be9814be3';          // ⬅️ ВСТАВЬ СЮДА
+const API_KEY = '$2a$10$ha8pk4bXp4t4PgVAuZFLuO6jdp30DlDKaAqhj3McxWvmnYRPeWzWy';        // ⬅️ И СЮДА
+const API_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
 // ===== ИНИЦИАЛИЗАЦИЯ =====
 document.addEventListener('DOMContentLoaded', function() {
     initializeSignatureSystem();
-    updateCounter(); // сразу показывает актуальное число
     loadHighScore();
     generateQRCodes();
 });
 
-// ===== СИСТЕМА ПОДПИСЕЙ =====
-let signatures = JSON.parse(localStorage.getItem('toiletSignatures')) || [];
+// ===== ЗАГРУЗКА ПОДПИСЕЙ С СЕРВЕРА =====
+let signatures = [];
+let userSigned = false;
 
+async function loadSignatures() {
+    try {
+        const response = await fetch(API_URL, {
+            headers: { 'X-Master-Key': API_KEY }
+        });
+        const data = await response.json();
+        signatures = data.record.signatures || [];
+        updateCounter();
+        
+        // Проверяем, подписывался ли этот пользователь (по ID в localStorage)
+        const userId = localStorage.getItem('userId');
+        if (userId && signatures.some(s => s.id === userId)) {
+            userSigned = true;
+            document.getElementById('supportCheckbox').checked = true;
+            document.getElementById('supportCheckbox').disabled = true;
+            document.getElementById('signButton').disabled = true;
+            document.getElementById('signatureStatus').textContent = '✅ Ты уже поддержал кампанию! Спасибо!';
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки подписей:', error);
+        signatures = [];
+    }
+}
+
+// ===== СОХРАНЕНИЕ ПОДПИСЕЙ НА СЕРВЕР =====
+async function saveSignatures() {
+    try {
+        await fetch(API_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': API_KEY
+            },
+            body: JSON.stringify({ signatures })
+        });
+    } catch (error) {
+        console.error('Ошибка сохранения:', error);
+    }
+}
+
+// ===== СИСТЕМА ПОДПИСЕЙ =====
 function initializeSignatureSystem() {
     const checkbox = document.getElementById('supportCheckbox');
     const signButton = document.getElementById('signButton');
     const statusElement = document.getElementById('signatureStatus');
     
-    const userSigned = localStorage.getItem('userSignedToilet');
-    if (userSigned) {
-        statusElement.textContent = '✅ Ты уже поддержал кампанию! Спасибо!';
-        statusElement.className = 'signature-status already-signed';
-        checkbox.checked = true;
-        checkbox.disabled = true;
-        signButton.disabled = true;
-    }
+    // Загружаем подписи при старте
+    loadSignatures();
     
     checkbox.addEventListener('change', function() {
         signButton.disabled = !this.checked;
     });
     
-    signButton.addEventListener('click', function() {
+    signButton.addEventListener('click', async function() {
         if (!userSigned) {
-            addSignature();
-            localStorage.setItem('userSignedToilet', 'true');
+            const userId = generateId();
+            localStorage.setItem('userId', userId);
+            
+            signatures.push({
+                id: userId,
+                timestamp: new Date().toISOString()
+            });
+            
+            await saveSignatures(); // сохраняем на сервер
+            
+            userSigned = true;
             statusElement.textContent = '🎉 Отлично! Твоя подпись учтена!';
             statusElement.className = 'signature-status success';
             checkbox.disabled = true;
             signButton.disabled = true;
-            updateCounter(); // обновляем счётчик сразу
+            updateCounter();
             createConfetti();
         }
     });
 }
 
-function addSignature() {
-    const timestamp = new Date().toISOString();
-    signatures.push({ timestamp, id: generateId() });
-    localStorage.setItem('toiletSignatures', JSON.stringify(signatures));
-}
-
 function updateCounter() {
     const counterElement = document.getElementById('signatureCounter');
-    if (!counterElement) return;
-    const count = signatures.length;
-    counterElement.textContent = count; // без анимации, но надёжно
+    if (counterElement) {
+        counterElement.textContent = signatures.length;
+    }
 }
 
 function generateId() {
