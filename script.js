@@ -95,9 +95,9 @@ function createConfetti() {
 function generateQRCodes() {
     // ⬇️⬇️⬇️ СЮДА ВСТАВЛЯЙ СВОИ ССЫЛКИ НА КАРТИНКИ QR ⬇️⬇️⬇️
     const myImages = [
-        'https://i.postimg.cc/your-code-1/your-image-1.jpg', // Главная страница
-        'https://i.postimg.cc/your-code-2/your-image-2.jpg', // ТГ-КАНАЛ
-        'https://i.postimg.cc/your-code-3/your-image-3.jpg'  // Бонус
+        'https://i.postimg.cc/KjNqRB2D/IMG-20260215-200156-682.jpg', // Главная страница
+        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg', // ТГ-КАНАЛ
+        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg'  // Бонус
     ];
 
     for (let i = 0; i < myImages.length; i++) {
