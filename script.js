@@ -1,7 +1,7 @@
 // ===== ИНИЦИАЛИЗАЦИЯ =====
 document.addEventListener('DOMContentLoaded', function() {
     initializeSignatureSystem();
-    updateCounter();
+    updateCounter(); // сразу показывает актуальное число
     loadHighScore();
     generateQRCodes();
 });
@@ -35,7 +35,7 @@ function initializeSignatureSystem() {
             statusElement.className = 'signature-status success';
             checkbox.disabled = true;
             signButton.disabled = true;
-            updateCounter();
+            updateCounter(); // обновляем счётчик сразу
             createConfetti();
         }
     });
@@ -49,22 +49,9 @@ function addSignature() {
 
 function updateCounter() {
     const counterElement = document.getElementById('signatureCounter');
-    animateCounter(counterElement, signatures.length);
-}
-
-function animateCounter(element, target) {
-    const duration = 1000;
-    const start = parseInt(element.textContent) || 0;
-    const increment = (target - start) / (duration / 16);
-    let current = start;
-    const timer = setInterval(() => {
-        current += increment;
-        if ((increment > 0 && current >= target) || (increment < 0 && current <= target)) {
-            current = target;
-            clearInterval(timer);
-        }
-        element.textContent = Math.floor(current);
-    }, 16);
+    if (!counterElement) return;
+    const count = signatures.length;
+    counterElement.textContent = count; // без анимации, но надёжно
 }
 
 function generateId() {
@@ -93,11 +80,10 @@ function createConfetti() {
 
 // ===== QR КОДЫ =====
 function generateQRCodes() {
-    // ⬇️⬇️⬇️ СЮДА ВСТАВЛЯЙ СВОИ ССЫЛКИ НА КАРТИНКИ QR ⬇️⬇️⬇️
     const myImages = [
-        'https://i.postimg.cc/KjNqRB2D/IMG-20260215-200156-682.jpg', // Главная страница
-        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg', // ТГ-КАНАЛ
-        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg'  // Бонус
+        'https://i.postimg.cc/your-code-1/your-image-1.jpg',
+        'https://i.postimg.cc/your-code-2/your-image-2.jpg',
+        'https://i.postimg.cc/your-code-3/your-image-3.jpg'
     ];
 
     for (let i = 0; i < myImages.length; i++) {
@@ -135,7 +121,7 @@ function downloadQR(qrId) {
     link.click();
 }
 
-// ===== ИГРА (ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ) =====
+// ===== ИГРА =====
 function openGame() {
     document.getElementById('gameModal').classList.add('active');
     if (typeof initGame === 'function') initGame();
@@ -154,71 +140,23 @@ function loadHighScore() {
     }
 }
 
-function saveHighScore(score) {
-    const current = parseInt(localStorage.getItem('toiletGameHighScore')) || 0;
-    if (score > current) {
-        localStorage.setItem('toiletGameHighScore', score);
-        loadHighScore();
-    }
-}
-
-// ===== КОЛЕСО (АНИМИРОВАННОЕ) =====
+// ===== ПРИЗ =====
 const prizes = ['Карандаш', 'Ручка', 'Ластик', 'Тетрадь'];
-let spinning = false;
 
-function openWheel() {
-    const modal = document.getElementById('wheelModal');
-    const wheel = document.getElementById('wheel');
-    const spinBtn = document.getElementById('spinButton');
-    const resultDiv = document.getElementById('wheelResult');
-    const messageDiv = document.querySelector('.prize-message');
-    
-    // Сбрасываем состояние
-    wheel.style.transform = 'rotate(0deg)';
-    resultDiv.style.display = 'none';
-    messageDiv.style.display = 'none';
-    spinBtn.style.display = 'inline-block';
-    spinBtn.disabled = false;
-    spinning = false;
-    
+function openPrize(prize) {
+    const modal = document.getElementById('prizeModal');
+    const resultDiv = document.getElementById('prizeResult');
+    resultDiv.innerHTML = `
+        <div style="font-size: 4rem; margin: 20px;">🎲</div>
+        <div style="font-size: 2rem; font-weight: bold; color: #e94560;">${prize}</div>
+        <p style="margin-top: 20px;">Ты выиграл(а) этот приз!</p>
+    `;
     modal.classList.add('active');
+    createConfetti();
 }
 
-function closeWheel() {
-    document.getElementById('wheelModal').classList.remove('active');
-}
-
-function spinWheel() {
-    if (spinning) return;
-    
-    const wheel = document.getElementById('wheel');
-    const resultDiv = document.getElementById('wheelResult');
-    const messageDiv = document.querySelector('.prize-message');
-    const spinBtn = document.getElementById('spinButton');
-    
-    spinning = true;
-    spinBtn.disabled = true;
-    
-    // Случайный индекс приза (0-3)
-    const randomIndex = Math.floor(Math.random() * prizes.length);
-    // Каждый сектор занимает 90°, указатель сверху. Чтобы указатель указывал на середину сектора,
-    // нужно повернуть колесо на угол: -(randomIndex * 90 + 45) + 360 * 5 (5 полных оборотов)
-    const targetAngle = -(randomIndex * 90 + 45) + 360 * 5;
-    
-    wheel.style.transform = `rotate(${targetAngle}deg)`;
-    
-    setTimeout(() => {
-        resultDiv.innerHTML = `
-            <div style="font-size: 4rem;">🎲</div>
-            <div style="font-size: 2rem; font-weight: bold; color: #e94560;">${prizes[randomIndex]}</div>
-            <p style="margin-top: 20px;">Ты выиграл(а) этот приз!</p>
-        `;
-        resultDiv.style.display = 'block';
-        messageDiv.style.display = 'block';
-        spinBtn.style.display = 'none';
-        spinning = false;
-        createConfetti();
-    }, 3000); // время совпадает с transition в CSS
+function closePrize() {
+    document.getElementById('prizeModal').classList.remove('active');
 }
 
 // ===== ПАСХАЛКИ =====
@@ -242,7 +180,7 @@ function closeEasterEgg() {
     document.getElementById('easterEggModal').classList.remove('active');
 }
 
-// Закрытие модалок по клику вне
+// ===== ЗАКРЫТИЕ МОДАЛОК =====
 window.addEventListener('click', (e) => {
     if (e.target.classList.contains('modal')) {
         e.target.classList.remove('active');
