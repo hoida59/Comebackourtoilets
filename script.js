@@ -124,9 +124,9 @@ function createConfetti() {
 // ===== QR КОДЫ =====
 function generateQRCodes() {
     const myImages = [
-        'https://i.postimg.cc/your-code-1/your-image-1.jpg',
-        'https://i.postimg.cc/your-code-2/your-image-2.jpg',
-        'https://i.postimg.cc/your-code-3/your-image-3.jpg'
+        'https://i.postimg.cc/4yVwGHJ5/IMG-20260215-200156-682.jpg',
+        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg',
+        'https://i.postimg.cc/BnqLkXnk/IMG-20260213-231634-967.jpg'
     ];
 
     for (let i = 0; i < myImages.length; i++) {
